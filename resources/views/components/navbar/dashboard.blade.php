@@ -15,7 +15,7 @@
             </path>
           </svg>
         </button>
-        <a href="https://flowbite.com" class="flex ml-2 md:mr-24">
+        <a href="{{ route('dasbor') }}" class="flex ml-2 md:mr-24">
           <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />
           <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{{ $appName }} - PORTAL</span>
         </a>
@@ -27,7 +27,7 @@
               class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
               aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+              <img class="w-8 h-8 rounded-full" src="{{ auth()->user()->avatar }}"
                 alt="user photo">
             </button>
           </div>
@@ -36,32 +36,22 @@
             id="dropdown-user">
             <div class="px-4 py-3" role="none">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                Neil Sims
+                {{ auth()->user()->name }}
               </p>
               <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                neil.sims@flowbite.com
+                {{ auth()->user()->email }}
               </p>
             </div>
             <ul class="py-1" role="none">
               <li>
-                <a href="#"
+                <a href="{{ route('profil.index') }}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem">Dashboard</a>
+                  role="menuitem">Profil</a>
               </li>
               <li>
-                <a href="#"
+                <a href="{{ route('auth.logout') }}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem">Settings</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem">Earnings</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                  role="menuitem">Sign outttt</a>
+                  role="menuitem">Logout</a>
               </li>
             </ul>
           </div>

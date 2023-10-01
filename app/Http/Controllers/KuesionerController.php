@@ -11,7 +11,7 @@ class KuesionerController extends Controller
 {
     public function index()
     {
-        $kuesioner = Kuesioner::all();
+        $kuesioner = Kuesioner::latest()->paginate(5);
         return view('pages.dashboard.kuesioner.index', compact('kuesioner'));
     }
 

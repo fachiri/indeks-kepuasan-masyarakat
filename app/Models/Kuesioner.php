@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
 class Kuesioner extends Model
@@ -23,5 +24,10 @@ class Kuesioner extends Model
     self::creating(function ($model) {
       $model->uuid = (string) Uuid::uuid4();
     });
+  }
+
+  public function answers(): HasMany
+  {
+    return $this->hasMany(Answer::class, 'kuesioner_id');
   }
 }
