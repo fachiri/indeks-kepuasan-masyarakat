@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name', 50);
-            $table->string('email', 50)->unique();
-            $table->string('telp', 12);
+            $table->foreignId('responden_id')->constrained('respondens')->onDelete('cascade');
             $table->text('feedback');
             $table->timestamps();
         });

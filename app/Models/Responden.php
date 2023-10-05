@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
 
 class Responden extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'gender', 'age', 'education', 'job'];
+    protected $fillable = ['name', 'gender', 'age', 'education', 'job', 'village', 'email', 'telp'];
 
     public function getRouteKeyName(): string
     {
@@ -29,5 +30,10 @@ class Responden extends Model
     public function answers(): HasMany
     {
         return $this->hasMany(Answer::class, 'responden_id');
+    }
+
+    public function feedback(): HasOne
+    {
+        return $this->hasOne(Feedback::class);
     }
 }

@@ -116,7 +116,8 @@ class IndexController extends Controller
                     'gender' => 'required',
                     'age' => 'required|numeric|min:1|max:122',
                     'education' => 'required',
-                    'job' => 'required'
+                    'job' => 'required',
+                    'village' => 'required'
                 ]);
 
                 if ($validator->fails()) {
@@ -178,7 +179,17 @@ class IndexController extends Controller
                 'age' => $request->age,
                 'education' => $request->education,
                 'job' => $request->job,
+                'village' => $request->village,
+                'email' => $request->email,
+                'telp' => $request->telp,
             ]);
+
+            if($request->feedback) {
+                Feedback::create([
+                    'responden_id' => (int) $responden->id,
+                    'feedback' => $request->feedback
+                ]);
+            }
 
             foreach ($request->answers as $answer) {
                 $answerData = json_decode($answer, true);
@@ -192,38 +203,6 @@ class IndexController extends Controller
             return redirect()
                 ->route('index')
                 ->with('success', 'Data berhasil disimpan!');
-        } catch (\Throwable $th) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['message' => ['Terjadi kesalahan!', $th->getMessage()]]);
-        }
-    }
-
-    public function kritik_saran()
-    {
-        return view('pages.public.kritik-saran');
-    }
-
-    public function kritik_saran_store(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:50',
-                'email' => 'required|email|max:50',
-                'telp' => 'required|numeric|digits:12',
-                'feedback' => 'required|string'
-            ]);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withInput()->withErrors($validator);
-            }
-
-            Feedback::create($request->only('name', 'email', 'telp', 'feedback'));
-
-            return redirect()
-                ->route('kritik_saran')
-                ->with('success', 'Kritik dan Saran berhasil disimpan!');
         } catch (\Throwable $th) {
             return redirect()
                 ->back()

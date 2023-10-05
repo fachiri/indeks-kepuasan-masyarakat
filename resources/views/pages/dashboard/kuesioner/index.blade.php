@@ -14,7 +14,7 @@
             <x-button.create text="Tambah Kuesioner" :href="route('kuesioner.create')" />
             <x-button.submit text="Hapus" id="deleteMany" class="hidden" color="red" icon="trash" name="action" value="delete" />
           </div>
-          <x-form.search />
+          {{-- <x-form.search /> --}}
         </div>
   
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

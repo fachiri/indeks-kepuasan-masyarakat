@@ -34,13 +34,13 @@
 								{{ $loop->iteration }}
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->name }}
+								{{ $item->responden->name }}
 							</td>
               <td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->email }}
+								{{ $item->responden->email }}
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->telp }}
+								{{ $item->responden->telp }}
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 								{{ $item->feedback }}

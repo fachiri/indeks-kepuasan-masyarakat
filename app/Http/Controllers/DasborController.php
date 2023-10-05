@@ -8,6 +8,94 @@ use App\Models\Kuesioner;
 use App\Models\Responden;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Exports\IkmExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+
+function getIkmData()
+{
+    $data = [];
+
+    $respondens = Responden::all();
+    $kuesioners = Kuesioner::all();
+
+    $bobotNilaiTertimbang = 1;
+    if (count($kuesioners) > 0) {
+        $bobotNilaiTertimbang = 1 / count($kuesioners);
+    }
+
+    $nilaiPersepsiPerUnit = [];
+    foreach ($respondens as $keyResponden => $responden) {
+        foreach ($responden->answers as $keyAnswer => $answer) {
+            $nilaiPersepsiPerUnit[$keyResponden][$keyAnswer] = (object) [
+                'question' => $answer->kuesioner->question,
+                'answer' => $answer->answer
+            ];
+        }
+    }
+
+    $totalAnswer = [];
+    foreach ($nilaiPersepsiPerUnit as $key => $array) {
+        for ($i = 0; $i < count($array); $i++) {
+            if (!isset($totalAnswer[$i])) {
+                $totalAnswer[$i] = 0;
+            }
+            $totalAnswer[$i] += $array[$i]->answer;
+        }
+    }
+
+    foreach ($totalAnswer as $key => $value) {
+        $data[$key] = (object) [
+            'question' => $nilaiPersepsiPerUnit[0][$key]->question,
+            'totalNilaiPersepsiPerUnit' => $value
+        ];
+    }
+
+    foreach ($data as $key => $value) {
+        $data[$key] = (object) [
+            'question' => $value->question,
+            'totalNilaiPersepsiPerUnit' => $value->totalNilaiPersepsiPerUnit,
+            'NRRPerUnsur' => $value->totalNilaiPersepsiPerUnit / count($respondens)
+        ];
+    }
+
+    foreach ($data as $key => $value) {
+        $data[$key] = (object) [
+            'question' => $value->question,
+            'totalNilaiPersepsiPerUnit' => $value->totalNilaiPersepsiPerUnit,
+            'NRRPerUnsur' => $value->NRRPerUnsur,
+            'NRRTertimbangUnsur' => $value->NRRPerUnsur * $bobotNilaiTertimbang
+        ];
+    }
+
+    $IKM = 0;
+    foreach ($data as $value) {
+        $IKM += $value->NRRTertimbangUnsur;
+    }
+
+    $konversiIKM = $IKM * 25;
+
+    $ikm = [
+        'nilaiIkmTertimbang' => number_format($IKM, 2),
+        'ikmUnit' => number_format($konversiIKM, 2),
+        'mutu' => nilaPersepsi($konversiIKM)->mutu,
+        'kinerja' => nilaPersepsi($konversiIKM)->kinerja,
+        'responden' => (object) [
+            'jumlah' => $respondens->count(),
+            'laki' => $respondens->where('gender', 'Laki-laki')->count(),
+            'perempuan' => $respondens->where('gender', 'Perempuan')->count(),
+            'sd' => $respondens->where('education', 'SD')->count(),
+            'smp' => $respondens->where('education', 'SMP')->count(),
+            'sma' => $respondens->where('education', 'SMA')->count(),
+            'smk' => $respondens->where('education', 'SMK')->count(),
+            's1' => $respondens->where('education', 'S1')->count(),
+            's2' => $respondens->where('education', 'S2')->count(),
+            's3' => $respondens->where('education', 'S3')->count(),
+        ]
+    ];
+
+    return $ikm;
+}
 
 class DasborController extends Controller
 {
@@ -148,5 +236,21 @@ class DasborController extends Controller
         $konversiIKM = $IKM * 25;
 
         return view('pages.dashboard.ikm.index', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
+    }
+
+    public function ikm_export()
+    {
+        $ikm = getIkmData();
+
+        $pdf = PDF::loadView('export.ikm', compact('ikm'));
+
+        return $pdf->download('Laporan IKM.pdf');
+    }
+
+    public function ikm_preview()
+    {
+        $ikm = getIkmData();
+
+        return view('export.ikm', compact('ikm'));
     }
 }

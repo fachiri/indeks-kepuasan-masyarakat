@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('age');
             $table->string('education');
             $table->string('job');
+            $table->string('village');
+            $table->string('email', 50)->unique()->nullable();
+            $table->string('telp', 12)->nullable();
             $table->timestamps();
         });
     }

@@ -15,11 +15,7 @@
 		    (object) [
 		        'label' => 'Kuesioner',
 		        'route' => route('kuesioner'),
-		    ],
-		    (object) [
-		        'label' => 'Kritik & Saran',
-		        'route' => route('kritik_saran'),
-		    ],
+		    ]
 		]" />
 		@yield('content')
 		<x-script.toast />
