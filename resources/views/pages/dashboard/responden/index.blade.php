@@ -10,7 +10,7 @@
 			<div class="flex items-center justify-between pb-4">
 				<div class="flex space-x-5">
 					<x-form.per-page :action="route('responden.index', ['page' => request('page'), 'filter' => request('filter'), 'filter_by' => request('filter_by')])" />
-					<x-form.filter :action="route('responden.index')" :options="[
+					<x-form.filter :action="route('responden.index')" :is-multi="true" :options="[
 					    'Jenis Kelamin' => [
 					        (object) [
 					            'name' => 'Laki-laki',

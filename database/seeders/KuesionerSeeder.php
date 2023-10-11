@@ -12,7 +12,7 @@ class KuesionerSeeder extends Seeder
 {
     public function run(): void
     {
-        $totalRespondens = 33;
+        $totalRespondens = 67;
         $kuesioners = Kuesioner::all();
         $respondens = Responden::factory()->count($totalRespondens)->make();
         

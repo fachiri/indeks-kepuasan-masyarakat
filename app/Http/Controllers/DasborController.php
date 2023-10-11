@@ -11,13 +11,11 @@ use Illuminate\Http\Request;
 use App\Exports\IkmExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Illuminate\View\View;
 
-function getIkmData()
+function getIkmData($respondens, $kuesioners)
 {
     $data = [];
-
-    $respondens = Responden::all();
-    $kuesioners = Kuesioner::all();
 
     $bobotNilaiTertimbang = 1;
     if (count($kuesioners) > 0) {
@@ -172,84 +170,52 @@ class DasborController extends Controller
         return view('pages.dashboard.index', compact('total', 'answers'));
     }
 
-    public function ikm()
+    public function ikm(Request $request): View
     {
-        $data = [];
+        $query = Responden::query();
 
-        $respondens = Responden::all();
+        if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
+            $query->where($request->filter_by, $request->filter);
+        }
+
+        $respondens = $query->get();
         $kuesioners = Kuesioner::all();
 
-        $bobotNilaiTertimbang = 1;
-        if (count($kuesioners) > 0) {
-            $bobotNilaiTertimbang = 1 / count($kuesioners);
-        }
-
-        $nilaiPersepsiPerUnit = [];
-        foreach ($respondens as $keyResponden => $responden) {
-            foreach ($responden->answers as $keyAnswer => $answer) {
-                $nilaiPersepsiPerUnit[$keyResponden][$keyAnswer] = (object) [
-                    'question' => $answer->kuesioner->question,
-                    'answer' => $answer->answer
-                ];
-            }
-        }
-
-        $totalAnswer = [];
-        foreach ($nilaiPersepsiPerUnit as $key => $array) {
-            for ($i = 0; $i < count($array); $i++) {
-                if (!isset($totalAnswer[$i])) {
-                    $totalAnswer[$i] = 0;
-                }
-                $totalAnswer[$i] += $array[$i]->answer;
-            }
-        }
-
-        foreach ($totalAnswer as $key => $value) {
-            $data[$key] = (object) [
-                'question' => $nilaiPersepsiPerUnit[0][$key]->question,
-                'totalNilaiPersepsiPerUnit' => $value
-            ];
-        }
-
-        foreach ($data as $key => $value) {
-            $data[$key] = (object) [
-                'question' => $value->question,
-                'totalNilaiPersepsiPerUnit' => $value->totalNilaiPersepsiPerUnit,
-                'NRRPerUnsur' => $value->totalNilaiPersepsiPerUnit / count($respondens)
-            ];
-        }
-
-        foreach ($data as $key => $value) {
-            $data[$key] = (object) [
-                'question' => $value->question,
-                'totalNilaiPersepsiPerUnit' => $value->totalNilaiPersepsiPerUnit,
-                'NRRPerUnsur' => $value->NRRPerUnsur,
-                'NRRTertimbangUnsur' => $value->NRRPerUnsur * $bobotNilaiTertimbang
-            ];
-        }
-
-        $IKM = 0;
-        foreach ($data as $value) {
-            $IKM += $value->NRRTertimbangUnsur;
-        }
-
-        $konversiIKM = $IKM * 25;
+        extract(getIKM($respondens, $kuesioners));
 
         return view('pages.dashboard.ikm.index', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
     }
 
-    public function ikm_export()
+    public function ikm_export(Request $request)
     {
-        $ikm = getIkmData();
+        $query = Responden::query();
+
+        if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
+            $query->where($request->filter_by, $request->filter);
+        }
+
+        $respondens = $query->get();
+        $kuesioners = Kuesioner::all();
+
+        $ikm = getIkmData($respondens, $kuesioners);
 
         $pdf = PDF::loadView('export.ikm', compact('ikm'));
 
         return $pdf->download('Laporan IKM.pdf');
     }
 
-    public function ikm_preview()
+    public function ikm_preview(Request $request): View
     {
-        $ikm = getIkmData();
+        $query = Responden::query();
+
+        if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
+            $query->where($request->filter_by, $request->filter);
+        }
+
+        $respondens = $query->get();
+        $kuesioners = Kuesioner::all();
+
+        $ikm = getIkmData($respondens, $kuesioners);
 
         return view('export.ikm', compact('ikm'));
     }

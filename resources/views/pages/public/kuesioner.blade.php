@@ -83,13 +83,72 @@
 	        'label' => 'Lainnya',
 	    ],
 	];
+	
+	$villages = [
+	    (object) [
+	        'value' => 'Moodulio',
+	        'label' => 'Moodulio',
+	    ],
+	    (object) [
+	        'value' => 'Muara Bone',
+	        'label' => 'Muara Bone',
+	    ],
+	    (object) [
+	        'value' => 'Masiaga',
+	        'label' => 'Masiaga',
+	    ],
+	    (object) [
+	        'value' => 'Taludaa',
+	        'label' => 'Taludaa',
+	    ],
+	    (object) [
+	        'value' => 'Permata',
+	        'label' => 'Permata',
+	    ],
+	    (object) [
+	        'value' => 'Inogaluma',
+	        'label' => 'Inogaluma',
+	    ],
+	    (object) [
+	        'value' => 'Molamahu',
+	        'label' => 'Molamahu',
+	    ],
+	    (object) [
+	        'value' => 'Sogitia',
+	        'label' => 'Sogitia',
+	    ],
+	    (object) [
+	        'value' => 'Cendana Putih',
+	        'label' => 'Cendana Putih',
+	    ],
+	    (object) [
+	        'value' => 'Monano',
+	        'label' => 'Monano',
+	    ],
+	    (object) [
+	        'value' => 'Tumbuh Mekar',
+	        'label' => 'Tumbuh Mekar',
+	    ],
+	    (object) [
+	        'value' => 'Waluhu',
+	        'label' => 'Waluhu',
+	    ],
+	    (object) [
+	        'value' => 'Ilohuuwa',
+	        'label' => 'Ilohuuwa',
+	    ],
+	    (object) [
+	        'value' => 'Bilolantunga',
+	        'label' => 'Bilolantunga',
+	    ],
+	];
 @endphp
 @extends('layouts.public')
 @section('title', 'Kuesioner')
 @section('content')
 	<section class="bg-white dark:bg-gray-900">
 		<ol class="mx-auto mt-8 flex max-w-screen-lg items-center px-4 text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base">
-			<li class="after:border-1 flex items-center {{ $step == 1 ? 'text-blue-600' : '' }} after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:text-blue-500 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
+			<li class="after:border-1 {{ $step == 1 ? 'text-blue-600' : '' }} flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 dark:text-blue-500 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
 				<span class="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
 					@if ($step > 1)
 						<svg class="mr-2.5 h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -101,7 +160,7 @@
 					Personal <span class="hidden sm:ml-2 sm:inline-flex">Info</span>
 				</span>
 			</li>
-			<li class="after:border-1 flex items-center {{ $step == 2 ? 'text-blue-600' : '' }} after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 after:content-[''] dark:after:border-gray-700 sm:after:inline-block md:w-full xl:after:mx-10">
+			<li class="after:border-1 {{ $step == 2 ? 'text-blue-600' : '' }} flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 after:content-[''] dark:after:border-gray-700 sm:after:inline-block md:w-full xl:after:mx-10">
 				<span class="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:after:hidden">
 					@if ($step > 2)
 						<svg class="mr-2.5 h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -113,18 +172,18 @@
 					Kuesioner
 				</span>
 			</li>
-			<li class="flex items-center {{ $step == 3 ? 'text-blue-600' : '' }}">
+			<li class="{{ $step == 3 ? 'text-blue-600' : '' }} flex items-center">
 				<span class="mr-2">3)</span>
 				Konfirmasi
 			</li>
 		</ol>
 		<div class="mx-auto flex max-w-screen-lg px-4 py-8">
 			@if ($step == 1)
-				<x-form.personal-info :genders="$genders" :educations="$educations" :jobs="$jobs" :total-kuesioner="$totalKuesioner" />
+				<x-form.personal-info :genders="$genders" :educations="$educations" :jobs="$jobs" :total-kuesioner="$totalKuesioner" :villages="$villages" />
 			@elseif ($step == 2)
 				<x-form.kuesioner :previous="$previous" :step="$step" :question="$question" :total-kuesioner="$totalKuesioner" :next="$next" :kuesioner="$kuesioner" :data="$data" />
 			@elseif ($step == 3)
-			<x-form.confirmation :kuesioner="$kuesioner" :data="$data" :step="$step" />
+				<x-form.confirmation :kuesioner="$kuesioner" :data="$data" :step="$step" />
 			@endif
 		</div>
 	</section>

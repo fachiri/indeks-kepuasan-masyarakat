@@ -56,8 +56,13 @@
 			@enderror
 		</div>
 		<div class="mb-5">
-			<label for="village" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Desa</label>
-			<input type="text" id="village" name="village" value="{{ old('village') }}" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+			<label for="villages" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Desa</label>
+			<select id="villages" name="village" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+				<option value="" hidden>-Pilih-</option>
+				@foreach ($villages as $item)
+					<option value="{{ $item->value }}" {{ old('village') == $item->value ? 'selected' : '' }}>{{ $item->label }}</option>
+				@endforeach
+			</select>
 			@error('village')
 				<p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
 			@enderror
