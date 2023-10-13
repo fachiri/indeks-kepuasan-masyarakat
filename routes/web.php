@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DasborController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\KuesionerController;
@@ -27,4 +28,6 @@ Route::middleware(['web', 'auth'])->prefix('dasbor')->group(function () {
    Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
    Route::post('/auth/password', [AuthController::class, 'change_password'])->name('auth.change_password');
+   Route::get('/laporan/responden/export', [ExportController::class, 'responden_export'])->name('responden.export');
+   Route::get('/laporan/responden/preview', [ExportController::class, 'responden_preview'])->name('responden.preview');
 });

@@ -8,8 +8,6 @@ use App\Models\Kuesioner;
 use App\Models\Responden;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Exports\IkmExport;
-use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Illuminate\View\View;
 
@@ -113,8 +111,9 @@ class DasborController extends Controller
 
         $today = Carbon::now();
         $dateArray = [];
-        for ($i = 0; $i <= 7; $i++) {
-            $dateArray[] = $today->subDays($i)->toDateString();
+
+        for ($i = 0; $i < 7; $i++) {
+            $dateArray[] = $today->copy()->subDays($i)->format('Y-m-d');
         }
         $dateArray = array_reverse($dateArray);
 
@@ -123,19 +122,35 @@ class DasborController extends Controller
             $dailyAnswers[$date] = [
                 (object) [
                     'label' => 0,
-                    'total' => Answer::where('answer', 1)->whereDate('created_at', $date)->count()
+                    'total' => Answer::where('answer', 1)
+                        ->whereHas('responden', function ($query) use ($date) {
+                            $query->whereDate('created_at', $date);
+                        })
+                        ->count()
                 ],
                 (object) [
                     'label' => 1,
-                    'total' => Answer::where('answer', 2)->whereDate('created_at', $date)->count()
+                    'total' => Answer::where('answer', 2)
+                        ->whereHas('responden', function ($query) use ($date) {
+                            $query->whereDate('created_at', $date);
+                        })
+                        ->count()
                 ],
                 (object) [
                     'label' => 2,
-                    'total' => Answer::where('answer', 3)->whereDate('created_at', $date)->count()
+                    'total' => Answer::where('answer', 3)
+                        ->whereHas('responden', function ($query) use ($date) {
+                            $query->whereDate('created_at', $date);
+                        })
+                        ->count()
                 ],
                 (object) [
                     'label' => 3,
-                    'total' => Answer::where('answer', 4)->whereDate('created_at', $date)->count()
+                    'total' => Answer::where('answer', 4)
+                        ->whereHas('responden', function ($query) use ($date) {
+                            $query->whereDate('created_at', $date);
+                        })
+                        ->count()
                 ],
             ];
         }
@@ -167,16 +182,130 @@ class DasborController extends Controller
             'daily' => $dailyAnswers
         ];
 
-        return view('pages.dashboard.index', compact('total', 'answers'));
+        $colors = (object) [
+            'red' => '#F63326',
+            'orange' => '#F07F00',
+            'yellow' => '#ECBD00',
+            'green' => '#4CD440',
+            'blue' => '#5540F5',
+            'purple' => '#A736FF',
+            'pink' => '#FF6EC7',
+            'brown' => '#8B572A',
+            'gray' => '#757575',
+            'teal' => '#00BFA5',
+            'cyan' => '#00BCD4',
+            'indigo' => '#3F51B5',
+            'lime' => '#CDDC39',
+            'amber' => '#FFC107'
+        ];
+
+        $dataGrafikJenisKelamin = (object) [
+            'series' => [
+                (int) number_format(getPercentage($dataRespondens->where('gender', 'Laki-laki')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('gender', 'Perempuan')->count(), $dataRespondens->count()), 2)
+            ],
+            'labels' => ['Laki-laki', 'Perempuan'],
+            'total' => $dataRespondens->count(),
+            'colors' => [$colors->red, $colors->blue]
+        ];
+
+        $dataGrafikUmur = (object) [
+            'series' => [
+                (int) number_format(getPercentage($dataRespondens->whereBetween('age', [0, 12])->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->whereBetween('age', [13, 19])->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->whereBetween('age', [20, 59])->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('age', '>=', 60)->count(), $dataRespondens->count()), 2)
+            ],
+            'labels' => ['Anak-anak (0-12)', 'Remaja (13-19)', 'Dewasa (20-59)', 'Lansia (>= 60)'],
+            'total' => $dataRespondens->count(),
+            'colors' => [$colors->red, $colors->orange, $colors->yellow, $colors->green]
+        ];
+
+        // Menghitung persentase responden berdasarkan pendidikan
+        $dataGrafikPendidikan = (object) [
+            'series' => [
+                (int) number_format(getPercentage($dataRespondens->where('education', 'SD')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'SMP')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'SMA')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'SMK')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'D3')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'S1')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'S2')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('education', 'S3')->count(), $dataRespondens->count()), 2),
+            ],
+            'labels' => ['SD', 'SMP', 'SMA', 'SMK', 'D3', 'S1', 'S2', 'S3'],
+            'total' => $dataRespondens->count(),
+            'colors' => [$colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->blue, $colors->purple, $colors->pink, $colors->brown]
+        ];
+
+        // Menghitung persentase responden berdasarkan pekerjaan
+        $dataGrafikPekerjaan = (object) [
+            'series' => [
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Pelajar/Mahasiswa')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Guru')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'PNS')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'TNI')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Polisi')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Dosen')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Pedagang')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Buruh')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('job', 'Lainnya')->count(), $dataRespondens->count()), 2),
+            ],
+            'labels' => ['Pelajar/Mahasiswa', 'Guru', 'PNS', 'TNI', 'Polisi', 'Dosen', 'Pedagang', 'Buruh', 'Lainnya'],
+            'total' => $dataRespondens->count(),
+            'colors' => [$colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->blue, $colors->purple, $colors->pink, $colors->brown, $colors->gray]
+        ];
+
+        // Menghitung persentase responden berdasarkan desa
+        $dataGrafikDesa = (object) [
+            'series' => [
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Moodulio')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Muara Bone')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Masiaga')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Taludaa')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Permata')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Inogaluma')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Molamahu')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Sogitia')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Cendana Putih')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Monano')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Tumbuh Mekar')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Waluhu')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Ilohuuwa')->count(), $dataRespondens->count()), 2),
+                (int) number_format(getPercentage($dataRespondens->where('village', 'Bilolantunga')->count(), $dataRespondens->count()), 2),
+            ],
+            'labels' => ['Moodulio', 'Muara Bone', 'Masiaga', 'Taludaa', 'Permata', 'Inogaluma', 'Molamahu', 'Sogitia', 'Cendana Putih', 'Monano', 'Tumbuh Mekar', 'Waluhu', 'Ilohuuwa', 'Bilolantunga'],
+            'total' => $dataRespondens->count(),
+            'colors' => [$colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->blue, $colors->purple, $colors->pink, $colors->brown, $colors->gray, $colors->teal, $colors->cyan, $colors->indigo, $colors->lime, $colors->amber]
+        ];
+
+        return view('pages.dashboard.index', compact('total', 'answers', 'dataGrafikJenisKelamin', 'dataGrafikUmur', 'dataGrafikPendidikan', 'dataGrafikPekerjaan', 'dataGrafikDesa'));
     }
 
-    public function ikm(Request $request): View
+    public function ikm(Request $request)
     {
         $query = Responden::query();
+
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('ikm.index', array_merge($request->all(), $dates));
+        }
 
         if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
             $query->where($request->filter_by, $request->filter);
         }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
 
         $respondens = $query->get();
         $kuesioners = Kuesioner::all();
@@ -190,9 +319,26 @@ class DasborController extends Controller
     {
         $query = Responden::query();
 
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('ikm.index', array_merge($request->all(), $dates));
+        }
+
         if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
             $query->where($request->filter_by, $request->filter);
         }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
 
         $respondens = $query->get();
         $kuesioners = Kuesioner::all();
@@ -208,9 +354,26 @@ class DasborController extends Controller
     {
         $query = Responden::query();
 
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('ikm.index', array_merge($request->all(), $dates));
+        }
+
         if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
             $query->where($request->filter_by, $request->filter);
         }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
 
         $respondens = $query->get();
         $kuesioners = Kuesioner::all();

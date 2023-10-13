@@ -82,16 +82,45 @@
 						Preview
 					</a>
 				</div>
-				<x-form.filter action="#" :options="[
-				    (object) [
-				        'name' => 'Semua',
-				        'route' => route('ikm.index', ['filter' => 'Semua', 'filter_by' => 'village']),
-				    ],
-						...$villages
-				]" />
+				<form id="form-action" method="GET" action="{{ route('ikm.index') }}" class="flex items-center space-x-3">
+					<input type="hidden" name="filter" value="{{ request('filter') }}">
+					<input type="hidden" name="filter_by" value="{{ request('filter_by') }}">
+					<div class="relative">
+						<input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" class="date block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+						<label for="start_date" class="absolute -top-2 left-3 bg-white px-1 text-[.65rem] text-gray-400">Tanggal Mulai</label>
+					</div>
+					<div class="relative">
+						<input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" class="date block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+						<label for="end_date" class="absolute -top-2 left-3 bg-white px-1 text-[.65rem] text-gray-400">Tanggal Selesai</label>
+					</div>
+					<div class="relative">
+						<x-form.filter action="#" :options="[
+						    (object) [
+						        'name' => 'Semua',
+						        'route' => route('ikm.index', ['filter' => 'Semua', 'filter_by' => 'village']),
+						    ],
+						    ...$villages,
+						]" />
+						<label for="filter" class="absolute -top-2 left-3 bg-white px-1 text-[.65rem] text-gray-400">Desa</label>
+					</div>
+				</form>
 			</div>
-			<table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-				<thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+			<dl class="mb-5 grid grid-cols-3 divide-x divide-gray-200 text-sm text-gray-900 dark:divide-gray-700 dark:text-white">
+				<div class="flex flex-col">
+					<dt class="mb-1 text-gray-500 dark:text-gray-400">Desa</dt>
+					<dd class="font-semibold">{{ request('filter') ?? 'Semua' }}</dd>
+				</div>
+				<div class="flex flex-col pl-5">
+					<dt class="mb-1 text-gray-500 dark:text-gray-400">Tanggal Mulai</dt>
+					<dd class="font-semibold">{{ request('start_date') }}</dd>
+				</div>
+				<div class="flex flex-col pl-5">
+					<dt class="mb-1 text-gray-500 dark:text-gray-400">Tanggal Selesai</dt>
+					<dd class="font-semibold">{{ request('end_date') }}</dd>
+				</div>
+			</dl>
+			<table class="w-full border text-left text-sm text-gray-500 dark:text-gray-400">
+				<thead class="bg-blue-100 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
 					<tr>
 						<th scope="col" class="px-6 py-3">
 							Pertanyaan
@@ -166,4 +195,15 @@
 			</table>
 		</div>
 	</x-card>
+
+	<script>
+		const dates = document.querySelectorAll('.date');
+		const form = document.querySelector('#form-action');
+
+		dates.forEach(date => {
+			date.addEventListener('change', (e) => {
+				form.submit()
+			});
+		});
+	</script>
 @endsection

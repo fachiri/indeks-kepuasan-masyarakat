@@ -42,8 +42,8 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
-		<div class="w-full rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+	<div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
+		<div class="rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
 			<div class="mb-3 flex justify-between">
 				<div class="flex items-center justify-center">
 					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Berdasarkan Jawaban</h5>
@@ -51,7 +51,7 @@
 			</div>
 			<div class="py-6" id="grafik-berdasarkan-jawaban"></div>
 		</div>
-		<div class="col-span-2 w-full rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+		<div class="col-span-2 rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
 			<div class="mb-3 flex justify-between">
 				<div class="flex items-center justify-center">
 					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Jawaban Kuesioner Harian</h5>
@@ -60,9 +60,52 @@
 			<div id="grafik-jawaban-harian"></div>
 		</div>
 	</div>
+	<div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
+		<div class="rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+			<div class="mb-3 flex justify-between">
+				<div class="flex items-center justify-center">
+					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Responden Berdasarkan Jenis Kelamin</h5>
+				</div>
+			</div>
+			<div class="py-6" id="grafik-berdasarkan-jenis-kelamin"></div>
+		</div>
+		<div class="rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+			<div class="mb-3 flex justify-between">
+				<div class="flex items-center justify-center">
+					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Responden Berdasarkan Umur</h5>
+				</div>
+			</div>
+			<div class="py-6" id="grafik-berdasarkan-umur"></div>
+		</div>
+		<div class="rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+			<div class="mb-3 flex justify-between">
+				<div class="flex items-center justify-center">
+					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Responden Berdasarkan Pendidikan</h5>
+				</div>
+			</div>
+			<div class="py-6" id="grafik-berdasarkan-pendidikan"></div>
+		</div>
+	</div>
+	<div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
+		<div class="rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+			<div class="mb-3 flex justify-between">
+				<div class="flex items-center justify-center">
+					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Responden Berdasarkan Pekerjaan</h5>
+				</div>
+			</div>
+			<div class="py-6" id="grafik-berdasarkan-pekerjaan"></div>
+		</div>
+		<div class="col-span-2 rounded-lg border bg-white p-4 shadow dark:bg-gray-800 md:p-6">
+			<div class="mb-3 flex justify-between">
+				<div class="flex items-center justify-center">
+					<h5 class="pr-1 text-xl font-bold leading-none text-gray-900 dark:text-white">Grafik Responden Berdasarkan Desa</h5>
+				</div>
+			</div>
+			<div class="py-6" id="grafik-berdasarkan-desa"></div>
+		</div>
+	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
 	<script>
 		// ApexCharts options and config
 		window.addEventListener("load", function() {
@@ -157,7 +200,6 @@
 			}
 		});
 	</script>
-
 	<script>
 		// ApexCharts options and config
 		window.addEventListener("load", function() {
@@ -166,7 +208,7 @@
 			let series = []
 			let data = []
 
-			
+
 			answers.details.forEach((detail, key) => {
 				series.push({
 					name: detail.label,
@@ -174,8 +216,8 @@
 					data: []
 				})
 			});
-			
-			for(e in answers.daily) {
+
+			for (e in answers.daily) {
 				answers.daily[e].map((element) => series[element.label].data.push({
 					x: e,
 					y: element.total
@@ -262,6 +304,120 @@
 
 			if (document.getElementById("grafik-jawaban-harian") && typeof ApexCharts !== 'undefined') {
 				const chart = new ApexCharts(document.getElementById("grafik-jawaban-harian"), options);
+				chart.render();
+			}
+		});
+	</script>
+	<script>
+		window.addEventListener("load", function() {
+			const getChartOptions = (series, labels, total, colors) => {
+				return {
+					series,
+					labels,
+					colors,
+					chart: {
+						height: 320,
+						width: "100%",
+						type: "donut",
+					},
+					stroke: {
+						colors: ["transparent"],
+						lineCap: "",
+					},
+					plotOptions: {
+						pie: {
+							donut: {
+								labels: {
+									show: true,
+									name: {
+										show: true,
+										fontFamily: "Inter, sans-serif",
+										offsetY: 20,
+									},
+									total: {
+										showAlways: true,
+										show: true,
+										label: "Responden",
+										fontFamily: "Inter, sans-serif",
+										formatter: function(w) {
+											return `${total}`
+										},
+									},
+									value: {
+										show: true,
+										fontFamily: "Inter, sans-serif",
+										offsetY: -20,
+										formatter: function(value) {
+											return value + "%"
+										},
+									},
+								},
+								size: "80%",
+							},
+						},
+					},
+					grid: {
+						padding: {
+							top: -2,
+						},
+					},
+					dataLabels: {
+						enabled: false,
+					},
+					legend: {
+						position: "bottom",
+						fontFamily: "Inter, sans-serif",
+					},
+					yaxis: {
+						labels: {
+							formatter: function(value) {
+								return value + "%"
+							},
+						},
+					},
+					xaxis: {
+						labels: {
+							formatter: function(value) {
+								return value + "%"
+							},
+						},
+						axisTicks: {
+							show: false,
+						},
+						axisBorder: {
+							show: false,
+						},
+					},
+				}
+			}
+
+			const dataGrafikJenisKelamin = @json($dataGrafikJenisKelamin);
+			if (document.getElementById("grafik-berdasarkan-jenis-kelamin") && typeof ApexCharts !== 'undefined') {
+				const chart = new ApexCharts(document.getElementById("grafik-berdasarkan-jenis-kelamin"), getChartOptions(dataGrafikJenisKelamin.series, dataGrafikJenisKelamin.labels, dataGrafikJenisKelamin.total, dataGrafikJenisKelamin.colors));
+				chart.render();
+			}
+
+			const dataGrafikUmur = @json($dataGrafikUmur);
+			if (document.getElementById("grafik-berdasarkan-umur") && typeof ApexCharts !== 'undefined') {
+				const chart = new ApexCharts(document.getElementById("grafik-berdasarkan-umur"), getChartOptions(dataGrafikUmur.series, dataGrafikUmur.labels, dataGrafikUmur.total, dataGrafikUmur.colors));
+				chart.render();
+			}
+
+			const dataGrafikPendidikan = @json($dataGrafikPendidikan);
+			if (document.getElementById("grafik-berdasarkan-pendidikan") && typeof ApexCharts !== 'undefined') {
+				const chart = new ApexCharts(document.getElementById("grafik-berdasarkan-pendidikan"), getChartOptions(dataGrafikPendidikan.series, dataGrafikPendidikan.labels, dataGrafikPendidikan.total, dataGrafikPendidikan.colors));
+				chart.render();
+			}
+
+			const dataGrafikPekerjaan = @json($dataGrafikPekerjaan);
+			if (document.getElementById("grafik-berdasarkan-pekerjaan") && typeof ApexCharts !== 'undefined') {
+				const chart = new ApexCharts(document.getElementById("grafik-berdasarkan-pekerjaan"), getChartOptions(dataGrafikPekerjaan.series, dataGrafikPekerjaan.labels, dataGrafikPekerjaan.total, dataGrafikPekerjaan.colors));
+				chart.render();
+			}
+
+			const dataGrafikDesa = @json($dataGrafikDesa);
+			if (document.getElementById("grafik-berdasarkan-desa") && typeof ApexCharts !== 'undefined') {
+				const chart = new ApexCharts(document.getElementById("grafik-berdasarkan-desa"), getChartOptions(dataGrafikDesa.series, dataGrafikDesa.labels, dataGrafikDesa.total, dataGrafikDesa.colors));
 				chart.render();
 			}
 		});

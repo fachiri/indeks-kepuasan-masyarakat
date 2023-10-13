@@ -1,5 +1,5 @@
 <button id="multiLevelDropdownButton" data-dropdown-toggle="dropdown" class="inline-flex items-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500" type="button">
-	{{ request()->filter ?? 'Filter' }}
+	{{ request()->filter ?? 'Semua' }}
 	<svg class="ml-5 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
 		<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
 	</svg>
