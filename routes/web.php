@@ -30,4 +30,8 @@ Route::middleware(['web', 'auth'])->prefix('dasbor')->group(function () {
    Route::post('/auth/password', [AuthController::class, 'change_password'])->name('auth.change_password');
    Route::get('/laporan/responden/export', [ExportController::class, 'responden_export'])->name('responden.export');
    Route::get('/laporan/responden/preview', [ExportController::class, 'responden_preview'])->name('responden.preview');
+   Route::get('/village', [DasborController::class, 'village'])->name('village.index');
+   Route::post('/village', [DasborController::class, 'village_add'])->name('village.add');
+   Route::patch('/village/{uuid}', [DasborController::class, 'village_update'])->name('village.update');
+   Route::delete('/village/{uuid}', [DasborController::class, 'village_destroy'])->name('village.destroy');
 });

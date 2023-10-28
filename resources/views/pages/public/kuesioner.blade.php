@@ -83,65 +83,6 @@
 	        'label' => 'Lainnya',
 	    ],
 	];
-	
-	$villages = [
-	    (object) [
-	        'value' => 'Moodulio',
-	        'label' => 'Moodulio',
-	    ],
-	    (object) [
-	        'value' => 'Muara Bone',
-	        'label' => 'Muara Bone',
-	    ],
-	    (object) [
-	        'value' => 'Masiaga',
-	        'label' => 'Masiaga',
-	    ],
-	    (object) [
-	        'value' => 'Taludaa',
-	        'label' => 'Taludaa',
-	    ],
-	    (object) [
-	        'value' => 'Permata',
-	        'label' => 'Permata',
-	    ],
-	    (object) [
-	        'value' => 'Inogaluma',
-	        'label' => 'Inogaluma',
-	    ],
-	    (object) [
-	        'value' => 'Molamahu',
-	        'label' => 'Molamahu',
-	    ],
-	    (object) [
-	        'value' => 'Sogitia',
-	        'label' => 'Sogitia',
-	    ],
-	    (object) [
-	        'value' => 'Cendana Putih',
-	        'label' => 'Cendana Putih',
-	    ],
-	    (object) [
-	        'value' => 'Monano',
-	        'label' => 'Monano',
-	    ],
-	    (object) [
-	        'value' => 'Tumbuh Mekar',
-	        'label' => 'Tumbuh Mekar',
-	    ],
-	    (object) [
-	        'value' => 'Waluhu',
-	        'label' => 'Waluhu',
-	    ],
-	    (object) [
-	        'value' => 'Ilohuuwa',
-	        'label' => 'Ilohuuwa',
-	    ],
-	    (object) [
-	        'value' => 'Bilolantunga',
-	        'label' => 'Bilolantunga',
-	    ],
-	];
 @endphp
 @extends('layouts.public')
 @section('title', 'Kuesioner')

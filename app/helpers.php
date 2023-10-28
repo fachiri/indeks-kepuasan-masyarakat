@@ -97,7 +97,7 @@ if (!function_exists('getIKM')) {
 
     foreach ($totalAnswer as $key => $value) {
       $data[$key] = (object) [
-        'question' => $nilaiPersepsiPerUnit[0][$key]->question,
+        'question' => $kuesioners[$key]->question,
         'totalNilaiPersepsiPerUnit' => $value
       ];
     }

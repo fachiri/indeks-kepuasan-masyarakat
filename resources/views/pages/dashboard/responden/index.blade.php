@@ -313,7 +313,7 @@
 					@foreach ($respondens as $responden)
 						<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $loop->iteration }}
+								{{ $respondens->firstItem() + $loop->index }}
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 								{{ $responden->name }}
@@ -343,6 +343,14 @@
 
 			<div class="mt-5">
 				{{ $respondens->onEachSide(1)->appends([
+				        'start_date' => request('start_date'),
+				        'end_date' => request('end_date'),
+				        'gender' => request('gender'),
+				        'age' => request('age'),
+				        'education' => request('education'),
+				        'job' => request('job'),
+				        'village' => request('village'),
+				        'search' => request('search'),
 				        'per_page' => request('per_page'),
 				        'filter' => request('filter'),
 				        'filter_by' => request('filter_by'),

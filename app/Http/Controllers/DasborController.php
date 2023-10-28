@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Feedback;
 use App\Models\Kuesioner;
 use App\Models\Responden;
+use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PDF;
@@ -344,13 +345,14 @@ class DasborController extends Controller
         $kuesioners = Kuesioner::all();
 
         $ikm = getIkmData($respondens, $kuesioners);
+        $data = getIkm($respondens, $kuesioners);
 
-        $pdf = PDF::loadView('export.ikm', compact('ikm'));
+        $pdf = PDF::loadView('export.ikm', compact('ikm', 'data'));
 
         return $pdf->download('Laporan IKM.pdf');
     }
 
-    public function ikm_preview(Request $request): View
+    public function ikm_preview(Request $request)
     {
         $query = Responden::query();
 
@@ -379,7 +381,65 @@ class DasborController extends Controller
         $kuesioners = Kuesioner::all();
 
         $ikm = getIkmData($respondens, $kuesioners);
+        $data = getIkm($respondens, $kuesioners);
+        
+        $pdf = PDF::loadView('export.ikm', compact('ikm', 'data'));
+        
+        return $pdf->stream();
+    }
 
-        return view('export.ikm', compact('ikm'));
+    public function village()
+    {
+        $data = Village::latest()->paginate(5);
+
+        return view('pages.dashboard.village.index', compact('data'));
+    }
+
+    public function village_add(Request $request)
+    {
+        try {
+            Village::create($request->only('village'));
+            return redirect()
+                ->route('village.index')
+                ->with('success', 'Data berhasil disimpan!');
+        } catch (\Throwable $th) {
+            return redirect()->back()
+                ->withErrors(['message' => ['Terjadi kesalahan saat menyimpan data!', $th->getMessage()]]);
+        }
+    }
+
+    public function village_update(Request $request, $uuid)
+    {
+        try {
+            $village = Village::where('uuid', $uuid)->first();
+            if (!$village) {
+                return redirect()->back()->withErrors(['message' => 'Data tidak ditemukan!']);
+            }
+            $village->update([
+                'village' => $request->village
+            ]);
+            return redirect()->route('village.index')->with('success', 'Data berhasil diedit!');
+        } catch (\Throwable $th) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Terjadi kesalahan saat mengedit data! ' . $th->getMessage()]);
+        }
+    }
+
+    public function village_destroy($uuid)
+    {
+        try {
+            $village = Village::where('uuid', $uuid)->first();
+            if (!$village) {
+                return redirect()->back()->withErrors(['message' => 'Data tidak ditemukan!']);
+            }
+            // if ($village->allowDelete == 0) {
+            //     return redirect()->back()->withErrors(['message' => 'Data ini tidak bisa dihapus!']);
+            // }
+            Village::destroy($village->id);
+            return redirect()->route('village.index')->with('success', 'Data berhasil dihapus!');
+        } catch (\Throwable $th) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Terjadi kesalahan saat menghapus data! ' . $th->getMessage()]);
+        }
     }
 }

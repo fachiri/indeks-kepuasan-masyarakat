@@ -60,7 +60,7 @@
 			<select id="villages" name="village" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
 				<option value="" hidden>-Pilih-</option>
 				@foreach ($villages as $item)
-					<option value="{{ $item->value }}" {{ old('village') == $item->value ? 'selected' : '' }}>{{ $item->label }}</option>
+					<option value="{{ $item->village }}" {{ old('village') == $item->village ? 'selected' : '' }}>{{ $item->village }}</option>
 				@endforeach
 			</select>
 			@error('village')

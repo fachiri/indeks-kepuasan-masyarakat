@@ -5,35 +5,30 @@
 	        'link' => route('dasbor'),
 	        'icon' => 'chart-pie',
 	    ],
-			// (object) [
-			// 		'name' => 'Indeks',
-			// 		'link' => '#',
-			// 		'icon' => 'light-bulb',
-			// ],
-			(object) [
-					'name' => 'Kuesioner',
-					'link' => route('kuesioner.index'),
-					'icon' => 'document-duplicate',
-			],
-	    // (object) [
-	    //     'name' => 'Jawaban',
-	    //     'link' => '#',
-	    //     'icon' => 'pencil-square',
-	    // ],
-			(object) [
+	    (object) [
+	        'name' => 'Kuesioner',
+	        'link' => route('kuesioner.index'),
+	        'icon' => 'document-duplicate',
+	    ],
+	    (object) [
 	        'name' => 'Responden',
 	        'link' => route('responden.index'),
 	        'icon' => 'users',
 	    ],
-			(object) [
+	    (object) [
 	        'name' => 'IKM',
 	        'link' => route('ikm.index'),
 	        'icon' => 'star',
 	    ],
-			(object) [
+	    (object) [
 	        'name' => 'Kritik & Saran',
 	        'link' => route('feedback.index'),
 	        'icon' => 'envelope',
+	    ],
+	    (object) [
+	        'name' => 'Desa',
+	        'link' => route('village.index'),
+	        'icon' => 'map-pin',
 	    ]
 	];
 @endphp

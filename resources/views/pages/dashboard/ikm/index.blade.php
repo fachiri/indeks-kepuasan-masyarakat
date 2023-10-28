@@ -177,7 +177,7 @@
 					</tr>
 					<tr class="border-b bg-gray-50 font-bold">
 						<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
-							Mutu Pelayanan
+							Mutu Pelayanan (Hasil Penilaian)
 						</td>
 						<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 							{{ nilaPersepsi($konversiIKM)->mutu }}

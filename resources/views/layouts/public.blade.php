@@ -11,12 +11,7 @@
 	</head>
 
 	<body>
-		<x-navbar.public :app-name="config('app.name')" :links="[
-		    (object) [
-		        'label' => 'Kuesioner',
-		        'route' => route('kuesioner'),
-		    ]
-		]" />
+		<x-navbar.public :app-name="config('app.name')" :links="[]" />
 		@yield('content')
 		<x-script.toast />
 	</body>

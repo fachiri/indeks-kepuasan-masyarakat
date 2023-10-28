@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Feedback;
 use App\Models\Kuesioner;
 use App\Models\Responden;
+use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -104,7 +105,8 @@ class IndexController extends Controller
             }
 
             if ($step == 1) {
-                return view('pages.public.kuesioner', compact('step', 'totalKuesioner'));
+                $villages = Village::all();
+                return view('pages.public.kuesioner', compact('step', 'totalKuesioner', 'villages'));
             }
 
             if ($step == 2) {
