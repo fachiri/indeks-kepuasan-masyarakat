@@ -161,7 +161,12 @@
 							</tr>
 						</table>
 					</td>
-					<td>07 September - 30 Oktober</td>
+					<td>
+						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('start_date'))->isoFormat('DD MMMM', 'Do MMMM') }}
+						-
+						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('end_date'))->isoFormat('DD MMMM', 'Do MMMM') }}
+				</td>
+				
 				</tr>
 			</table>
 			<table style="margin-top: 50px; width: 100%;">

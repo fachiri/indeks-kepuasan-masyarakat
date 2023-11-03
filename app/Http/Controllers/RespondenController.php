@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Responden;
+use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -71,8 +72,9 @@ class RespondenController extends Controller
         }
 
         $respondens = $query->latest()->paginate($request->per_page ?? 5);
+        $villages = Village::all();
 
-        return view('pages.dashboard.responden.index', compact('respondens'));
+        return view('pages.dashboard.responden.index', compact('respondens', 'villages'));
     }
 
     public function show(Responden $responden)

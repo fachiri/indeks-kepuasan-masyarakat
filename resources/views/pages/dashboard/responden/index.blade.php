@@ -102,65 +102,6 @@
 	        'label' => 'Lainnya',
 	    ],
 	];
-
-	$villages = [
-	    (object) [
-	        'value' => 'Moodulio',
-	        'label' => 'Moodulio',
-	    ],
-	    (object) [
-	        'value' => 'Muara Bone',
-	        'label' => 'Muara Bone',
-	    ],
-	    (object) [
-	        'value' => 'Masiaga',
-	        'label' => 'Masiaga',
-	    ],
-	    (object) [
-	        'value' => 'Taludaa',
-	        'label' => 'Taludaa',
-	    ],
-	    (object) [
-	        'value' => 'Permata',
-	        'label' => 'Permata',
-	    ],
-	    (object) [
-	        'value' => 'Inogaluma',
-	        'label' => 'Inogaluma',
-	    ],
-	    (object) [
-	        'value' => 'Molamahu',
-	        'label' => 'Molamahu',
-	    ],
-	    (object) [
-	        'value' => 'Sogitia',
-	        'label' => 'Sogitia',
-	    ],
-	    (object) [
-	        'value' => 'Cendana Putih',
-	        'label' => 'Cendana Putih',
-	    ],
-	    (object) [
-	        'value' => 'Monano',
-	        'label' => 'Monano',
-	    ],
-	    (object) [
-	        'value' => 'Tumbuh Mekar',
-	        'label' => 'Tumbuh Mekar',
-	    ],
-	    (object) [
-	        'value' => 'Waluhu',
-	        'label' => 'Waluhu',
-	    ],
-	    (object) [
-	        'value' => 'Ilohuuwa',
-	        'label' => 'Ilohuuwa',
-	    ],
-	    (object) [
-	        'value' => 'Bilolantunga',
-	        'label' => 'Bilolantunga',
-	    ],
-	];
 @endphp
 @extends('layouts.dashboard', [
     'breadcrumbs' => [
@@ -224,7 +165,7 @@
 						<select name="village" id="village" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
 							<option value="">Semua</option>
 							@foreach ($villages as $item)
-								<option value="{{ $item->value }}" {{ request('village') == $item->value ? 'selected' : '' }}>{{ $item->label }}</option>
+								<option value="{{ $item->village }}" {{ request('village') == $item->village ? 'selected' : '' }}>{{ $item->village }}</option>
 							@endforeach
 						</select>
 					</div>

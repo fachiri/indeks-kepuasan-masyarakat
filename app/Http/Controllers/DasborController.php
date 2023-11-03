@@ -43,7 +43,7 @@ function getIkmData($respondens, $kuesioners)
 
     foreach ($totalAnswer as $key => $value) {
         $data[$key] = (object) [
-            'question' => $nilaiPersepsiPerUnit[0][$key]->question,
+            'question' => $kuesioners[$key]->question,
             'totalNilaiPersepsiPerUnit' => $value
         ];
     }
@@ -310,10 +310,11 @@ class DasborController extends Controller
 
         $respondens = $query->get();
         $kuesioners = Kuesioner::all();
+        $villages = Village::all();
 
         extract(getIKM($respondens, $kuesioners));
 
-        return view('pages.dashboard.ikm.index', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
+        return view('pages.dashboard.ikm.index', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang', 'villages'));
     }
 
     public function ikm_export(Request $request)

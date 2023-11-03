@@ -1,62 +1,11 @@
 @php
-	$villages = [
-	    (object) [
-	        'name' => 'Moodulio',
-	        'route' => route('ikm.index', ['filter' => 'Moodulio', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Muara Bone',
-	        'route' => route('ikm.index', ['filter' => 'Muara Bone', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Masiaga',
-	        'route' => route('ikm.index', ['filter' => 'Masiaga', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Taludaa',
-	        'route' => route('ikm.index', ['filter' => 'Taludaa', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Permata',
-	        'route' => route('ikm.index', ['filter' => 'Permata', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Inogaluma',
-	        'route' => route('ikm.index', ['filter' => 'Inogaluma', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Molamahu',
-	        'route' => route('ikm.index', ['filter' => 'Molamahu', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Sogitia',
-	        'route' => route('ikm.index', ['filter' => 'Sogitia', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Cendana Putih',
-	        'route' => route('ikm.index', ['filter' => 'Cendana Putih', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Monano',
-	        'route' => route('ikm.index', ['filter' => 'Monano', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Tumbuh Mekar',
-	        'route' => route('ikm.index', ['filter' => 'Tumbuh Mekar', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Waluhu',
-	        'route' => route('ikm.index', ['filter' => 'Waluhu', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Ilohuuwa',
-	        'route' => route('ikm.index', ['filter' => 'Ilohuuwa', 'filter_by' => 'village']),
-	    ],
-	    (object) [
-	        'name' => 'Bilolantunga',
-	        'route' => route('ikm.index', ['filter' => 'Bilolantunga', 'filter_by' => 'village']),
-	    ],
-	];
+	$sortedVillages = [];
+	foreach ($villages as $key => $village) {
+	    $sortedVillages[$key] = (object) [
+	        'name' => $village->village,
+	        'route' => route('ikm.index', ['filter' => $village->village, 'filter_by' => 'village']),
+	    ];
+	}
 @endphp
 @extends('layouts.dashboard', [
     'breadcrumbs' => [
@@ -99,7 +48,7 @@
 						        'name' => 'Semua',
 						        'route' => route('ikm.index', ['filter' => 'Semua', 'filter_by' => 'village']),
 						    ],
-						    ...$villages,
+						    ...$sortedVillages,
 						]" />
 						<label for="filter" class="absolute -top-2 left-3 bg-white px-1 text-[.65rem] text-gray-400">Desa</label>
 					</div>
