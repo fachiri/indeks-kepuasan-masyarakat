@@ -139,6 +139,7 @@ function getRespondenDataExport($request)
 
   $labels = [];
   $data = [];
+  $villages = Village::all();
   foreach ($villages as $key => $village) {
     $labels[$key] = '"'.$village->village.'"';
     $data[$key] = $respondens->where('village', $village->village)->count();
