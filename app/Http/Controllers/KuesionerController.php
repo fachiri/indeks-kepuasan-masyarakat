@@ -49,7 +49,7 @@ class KuesionerController extends Controller
         try {
             $kuesioner->question = $request->question;
             $kuesioner->update();
-            return redirect()->route('kuesioner.edit', $kuesioner->uuid)->with('success', 'Data berhasil diedit!');
+            return redirect()->route('kuesioner.index', $kuesioner->uuid)->with('success', 'Data berhasil diedit!');
         } catch (\Throwable $th) {
             return redirect()->back()
                 ->withErrors(['message' => ['Terjadi kesalahan saat mengedit data!', $th->getMessage()]]);

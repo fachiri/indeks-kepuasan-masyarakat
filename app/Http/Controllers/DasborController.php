@@ -258,24 +258,16 @@ class DasborController extends Controller
         ];
 
         // Menghitung persentase responden berdasarkan desa
+        $villages = Village::all();
+        $series = [];
+        $labels = [];
+        foreach ($villages as $key => $village) {
+            $series[$key] = (int) number_format(getPercentage($dataRespondens->where('village', $village->village)->count(), $dataRespondens->count()), 2);
+            $labels[$key] = $village->village;
+        }
         $dataGrafikDesa = (object) [
-            'series' => [
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Moodulio')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Muara Bone')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Masiaga')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Taludaa')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Permata')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Inogaluma')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Molamahu')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Sogitia')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Cendana Putih')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Monano')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Tumbuh Mekar')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Waluhu')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Ilohuuwa')->count(), $dataRespondens->count()), 2),
-                (int) number_format(getPercentage($dataRespondens->where('village', 'Bilolantunga')->count(), $dataRespondens->count()), 2),
-            ],
-            'labels' => ['Moodulio', 'Muara Bone', 'Masiaga', 'Taludaa', 'Permata', 'Inogaluma', 'Molamahu', 'Sogitia', 'Cendana Putih', 'Monano', 'Tumbuh Mekar', 'Waluhu', 'Ilohuuwa', 'Bilolantunga'],
+            'series' => $series,
+            'labels' => $labels,
             'total' => $dataRespondens->count(),
             'colors' => [$colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->blue, $colors->purple, $colors->pink, $colors->brown, $colors->gray, $colors->teal, $colors->cyan, $colors->indigo, $colors->lime, $colors->amber]
         ];
@@ -385,6 +377,77 @@ class DasborController extends Controller
         $data = getIkm($respondens, $kuesioners);
         
         $pdf = PDF::loadView('export.ikm', compact('ikm', 'data'));
+        
+        return $pdf->stream();
+    }
+
+    public function ikm_export_table(Request $request)
+    {
+        $query = Responden::query();
+
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('ikm.index', array_merge($request->all(), $dates));
+        }
+
+        if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
+            $query->where($request->filter_by, $request->filter);
+        }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
+        $respondens = $query->get();
+        $kuesioners = Kuesioner::all();
+        $villages = Village::all();
+
+        extract(getIKM($respondens, $kuesioners));
+
+        $pdf = PDF::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
+
+        return $pdf->download('Laporan IKM.pdf');
+    }
+
+    public function ikm_preview_table(Request $request)
+    {
+        $query = Responden::query();
+
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('ikm.index', array_merge($request->all(), $dates));
+        }
+
+        if ($request->has('filter') && $request->has('filter_by') && $request->filter != 'Semua') {
+            $query->where($request->filter_by, $request->filter);
+        }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
+        $respondens = $query->get();
+        $kuesioners = Kuesioner::all();
+
+        extract(getIKM($respondens, $kuesioners));
+        
+        $pdf = PDF::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
         
         return $pdf->stream();
     }

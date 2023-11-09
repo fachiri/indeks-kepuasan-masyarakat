@@ -3,77 +3,78 @@
 namespace App\Http\Controllers;
 
 use App\Models\Responden;
+use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PDF;
 
 function getRespondenDataExport($request)
 {
-    $query = Responden::query();
+  $query = Responden::query();
 
-    $query = Responden::query();
+  $query = Responden::query();
 
-    if (!$request->has('start_date') || !$request->has('end_date')) {
-        $oldestResponden = Responden::oldest('created_at')->first();
-        $newestResponden = Responden::latest('created_at')->first();
+  if (!$request->has('start_date') || !$request->has('end_date')) {
+    $oldestResponden = Responden::oldest('created_at')->first();
+    $newestResponden = Responden::latest('created_at')->first();
 
-        $dates = [
-            'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
-            'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
-        ];
+    $dates = [
+      'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+      'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+    ];
 
-        return redirect()->route('responden.index', array_merge($request->all(), $dates));
+    return redirect()->route('responden.index', array_merge($request->all(), $dates));
+  }
+
+  $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+  $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+  $query->whereBetween('created_at', [$startDate, $endDate]);
+
+  if ($request->has('search')) {
+    $searchTerm = $request->search;
+    $query->where(function ($subquery) use ($searchTerm) {
+      $subquery->where('name', 'like', "%$searchTerm%")
+        ->orWhere('gender', 'like', "%$searchTerm%")
+        ->orWhere('age', 'like', "%$searchTerm%")
+        ->orWhere('education', 'like', "%$searchTerm%")
+        ->orWhere('job', 'like', "%$searchTerm%")
+        ->orWhere('village', 'like', "%$searchTerm%");
+    });
+  }
+
+  if (isset($request->age)) {
+    if ($request->age == 'Anak-anak') {
+      $age = [0, 12];
+    } elseif ($request->age == 'Remaja') {
+      $age = [13, 19];
+    } elseif ($request->age == 'Dewasa') {
+      $age = [20, 59];
+    } elseif ($request->age == 'Lansia') {
+      $age = [60, 200];
     }
+    $query->whereBetween('age', $age);
+  }
 
-    $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
-    $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+  if (isset($request->gender)) {
+    $query->where('gender', $request->gender);
+  }
 
-    $query->whereBetween('created_at', [$startDate, $endDate]);
+  if (isset($request->education)) {
+    $query->where('education', $request->education);
+  }
 
-    if ($request->has('search')) {
-        $searchTerm = $request->search;
-        $query->where(function ($subquery) use ($searchTerm) {
-            $subquery->where('name', 'like', "%$searchTerm%")
-                ->orWhere('gender', 'like', "%$searchTerm%")
-                ->orWhere('age', 'like', "%$searchTerm%")
-                ->orWhere('education', 'like', "%$searchTerm%")
-                ->orWhere('job', 'like', "%$searchTerm%")
-                ->orWhere('village', 'like', "%$searchTerm%");
-        });
-    }
+  if (isset($request->job)) {
+    $query->where('job', $request->job);
+  }
 
-    if (isset($request->age)) {
-        if ($request->age == 'Anak-anak') {
-            $age = [0, 12];
-        } elseif ($request->age == 'Remaja') {
-            $age = [13, 19];
-        } elseif ($request->age == 'Dewasa') {
-            $age = [20, 59];
-        } elseif ($request->age == 'Lansia') {
-            $age = [60, 200];
-        }
-        $query->whereBetween('age', $age);
-    }
+  if (isset($request->village)) {
+    $query->where('village', $request->village);
+  }
 
-    if (isset($request->gender)) {
-        $query->where('gender', $request->gender);
-    }
+  $respondens = $query->get();
 
-    if (isset($request->education)) {
-        $query->where('education', $request->education);
-    }
-
-    if (isset($request->job)) {
-        $query->where('job', $request->job);
-    }
-
-    if (isset($request->village)) {
-        $query->where('village', $request->village);
-    }
-
-    $respondens = $query->get();
-
-    $chartJKConfig = '{
+  $chartJKConfig = '{
             "type": "bar",
             "data": {
               "labels": ["Laki-laki", "Perempuan"],
@@ -84,7 +85,7 @@ function getRespondenDataExport($request)
             }
           }';
 
-    $chartUmurConfig = '{
+  $chartUmurConfig = '{
             "type": "bar",
             "data": {
               "labels": ["Anak-anak (0-12)", "Remaja (13-19)", "Dewasa (20-59)", "Lansia (>= 60)"],
@@ -95,7 +96,7 @@ function getRespondenDataExport($request)
             }
           }';
 
-    $chartPendidikanConfig = '{
+  $chartPendidikanConfig = '{
             "type": "bar",
             "data": {
               "labels": ["SD", "SMP", "SMA", "SMK", "D3", "S1", "S2", "S3"],
@@ -115,7 +116,7 @@ function getRespondenDataExport($request)
             }
           }';
 
-    $chartPekerjaanConfig = '{
+  $chartPekerjaanConfig = '{
               "type": "bar",
               "data": {
                 "labels": ["Pelajar/Mahasiswa", "Guru", "PNS", "TNI", "Polisi", "Dosen", "Pedagang", "Buruh", "Lainnya"],
@@ -136,57 +137,186 @@ function getRespondenDataExport($request)
               }
             }';
 
-    $chartDesaConfig = '{
+  $labels = [];
+  $data = [];
+  foreach ($villages as $key => $village) {
+    $labels[$key] = '"'.$village->village.'"';
+    $data[$key] = $respondens->where('village', $village->village)->count();
+  }
+
+  $chartDesaConfig = '{
                 "type": "bar",
                 "data": {
-                  "labels": ["Moodulio", "Muara Bone", "Masiaga", "Taludaa", "Permata", "Inogaluma", "Molamahu", "Sogitia", "Cendana Putih", "Monano", "Tumbuh Mekar", "Waluhu", "Ilohuuwa", "Bilolantunga"],
+                  "labels": [' . implode(', ', $labels) . '],
                   "datasets": [{
                     "label": "Desa",
-                    "data": [
-                        ' . $respondens->where('village', 'Moodulio')->count() . ',
-                        ' . $respondens->where('village', 'Muara Bone')->count() . ',
-                        ' . $respondens->where('village', 'Masiaga')->count() . ',
-                        ' . $respondens->where('village', 'Taludaa')->count() . ',
-                        ' . $respondens->where('village', 'Permata')->count() . ',
-                        ' . $respondens->where('village', 'Inogaluma')->count() . ',
-                        ' . $respondens->where('village', 'Molamahu')->count() . ',
-                        ' . $respondens->where('village', 'Sogitia')->count() . ',
-                        ' . $respondens->where('village', 'Cendana Putih')->count() . ',
-                        ' . $respondens->where('village', 'Monano')->count() . ',
-                        ' . $respondens->where('village', 'Tumbuh Mekar')->count() . ',
-                        ' . $respondens->where('village', 'Waluhu')->count() . ',
-                        ' . $respondens->where('village', 'Ilohuuwa')->count() . ',
-                        ' . $respondens->where('village', 'Bilolantunga')->count() . ',
-                    ]
+                    "data": [' . implode(', ', $data) . ']
                   }]
                 }
               }';
 
-    return [
-        'chartJKConfig' => $chartJKConfig,
-        'chartUmurConfig' => $chartUmurConfig,
-        'chartPendidikanConfig' => $chartPendidikanConfig,
-        'chartPekerjaanConfig' => $chartPekerjaanConfig,
-        'chartDesaConfig' => $chartDesaConfig
-    ];
+  return [
+    'chartJKConfig' => $chartJKConfig,
+    'chartUmurConfig' => $chartUmurConfig,
+    'chartPendidikanConfig' => $chartPendidikanConfig,
+    'chartPekerjaanConfig' => $chartPekerjaanConfig,
+    'chartDesaConfig' => $chartDesaConfig
+  ];
 }
 
 class ExportController extends Controller
 {
-    public function responden_export(Request $request)
-    {
-        extract(getRespondenDataExport($request));
+  public function responden_export(Request $request)
+  {
+    extract(getRespondenDataExport($request));
 
-        $pdf = PDF::loadView('export.responden', compact('chartJKConfig', 'chartUmurConfig', 'chartPendidikanConfig', 'chartPekerjaanConfig', 'chartDesaConfig'));
+    $pdf = PDF::loadView('export.responden', compact('chartJKConfig', 'chartUmurConfig', 'chartPendidikanConfig', 'chartPekerjaanConfig', 'chartDesaConfig'));
 
-        return $pdf->download('Laporan Responden.pdf');
-    }
+    return $pdf->download('Laporan Responden.pdf');
+  }
 
-    public function responden_preview(Request $request)
-    {
-        extract(getRespondenDataExport($request));
+  public function responden_preview(Request $request)
+  {
+    extract(getRespondenDataExport($request));
 
-        $pdf = PDF::loadView('export.responden', compact('chartJKConfig', 'chartUmurConfig', 'chartPendidikanConfig', 'chartPekerjaanConfig', 'chartDesaConfig'));
-        return $pdf->stream();
-    }
+    $pdf = PDF::loadView('export.responden', compact('chartJKConfig', 'chartUmurConfig', 'chartPendidikanConfig', 'chartPekerjaanConfig', 'chartDesaConfig'));
+    return $pdf->stream();
+  }
+
+  public function responden_export_table(Request $request)
+  {
+    $query = Responden::query();
+
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('responden.index', array_merge($request->all(), $dates));
+        }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($subquery) use ($searchTerm) {
+                $subquery->where('name', 'like', "%$searchTerm%")
+                    ->orWhere('gender', 'like', "%$searchTerm%")
+                    ->orWhere('age', 'like', "%$searchTerm%")
+                    ->orWhere('education', 'like', "%$searchTerm%")
+                    ->orWhere('job', 'like', "%$searchTerm%")
+                    ->orWhere('village', 'like', "%$searchTerm%");
+            });
+        }
+
+        if (isset($request->age)) {
+            if ($request->age == 'Anak-anak') {
+                $age = [0, 12];
+            } elseif ($request->age == 'Remaja') {
+                $age = [13, 19];
+            } elseif ($request->age == 'Dewasa') {
+                $age = [20, 59];
+            } elseif ($request->age == 'Lansia') {
+                $age = [60, 200];
+            }
+            $query->whereBetween('age', $age);
+        }
+
+        if (isset($request->gender)) {
+            $query->where('gender', $request->gender);
+        }
+
+        if (isset($request->education)) {
+            $query->where('education', $request->education);
+        }
+
+        if (isset($request->job)) {
+            $query->where('job', $request->job);
+        }
+
+        if (isset($request->village)) {
+            $query->where('village', $request->village);
+        }
+
+        $respondens = $query->latest()->paginate($request->per_page ?? 5);
+
+    $pdf = PDF::loadView('export.responden-table', compact('respondens'));
+
+    return $pdf->download('Laporan Tabel Responden.pdf');
+  }
+
+  public function responden_preview_table(Request $request)
+  {
+    $query = Responden::query();
+
+        if (!$request->has('start_date') || !$request->has('end_date')) {
+            $oldestResponden = Responden::oldest('created_at')->first();
+            $newestResponden = Responden::latest('created_at')->first();
+
+            $dates = [
+                'start_date' => $oldestResponden ? $oldestResponden->created_at->format('Y-m-d') : Carbon::now()->subYear()->format('Y-m-d'),
+                'end_date' => $newestResponden ? $newestResponden->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')
+            ];
+
+            return redirect()->route('responden.index', array_merge($request->all(), $dates));
+        }
+
+        $startDate = Carbon::parse($request->start_date)->subDay()->startOfDay()->toDateTimeString();
+        $endDate = Carbon::parse($request->end_date)->addDay()->endOfDay()->toDateTimeString();
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($subquery) use ($searchTerm) {
+                $subquery->where('name', 'like', "%$searchTerm%")
+                    ->orWhere('gender', 'like', "%$searchTerm%")
+                    ->orWhere('age', 'like', "%$searchTerm%")
+                    ->orWhere('education', 'like', "%$searchTerm%")
+                    ->orWhere('job', 'like', "%$searchTerm%")
+                    ->orWhere('village', 'like', "%$searchTerm%");
+            });
+        }
+
+        if (isset($request->age)) {
+            if ($request->age == 'Anak-anak') {
+                $age = [0, 12];
+            } elseif ($request->age == 'Remaja') {
+                $age = [13, 19];
+            } elseif ($request->age == 'Dewasa') {
+                $age = [20, 59];
+            } elseif ($request->age == 'Lansia') {
+                $age = [60, 200];
+            }
+            $query->whereBetween('age', $age);
+        }
+
+        if (isset($request->gender)) {
+            $query->where('gender', $request->gender);
+        }
+
+        if (isset($request->education)) {
+            $query->where('education', $request->education);
+        }
+
+        if (isset($request->job)) {
+            $query->where('job', $request->job);
+        }
+
+        if (isset($request->village)) {
+            $query->where('village', $request->village);
+        }
+
+        $respondens = $query->latest()->paginate($request->per_page ?? 5);
+
+    $pdf = PDF::loadView('export.responden-table', compact('respondens'));
+    return $pdf->stream();
+  }
 }

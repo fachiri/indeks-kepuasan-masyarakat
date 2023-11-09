@@ -113,9 +113,9 @@
 					Kuesioner
 				</span>
 			</li>
-			<li class="{{ $step == 3 ? 'text-blue-600' : '' }} flex items-center">
+			<li class="{{ $step == 3 ? 'text-blue-600' : '' }} flex items-center whitespace-nowrap">
 				<span class="mr-2">3)</span>
-				Konfirmasi
+				Kritik & Saran
 			</li>
 		</ol>
 		<div class="mx-auto flex max-w-screen-lg px-4 py-8">
