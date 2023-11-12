@@ -9,8 +9,7 @@ use App\Models\Responden;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use PDF;
-use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 function getIkmData($respondens, $kuesioners)
 {
@@ -340,7 +339,30 @@ class DasborController extends Controller
         $ikm = getIkmData($respondens, $kuesioners);
         $data = getIkm($respondens, $kuesioners);
 
-        $pdf = PDF::loadView('export.ikm', compact('ikm', 'data'));
+        if (count($data['data']) == 0) {
+            return redirect()->back()
+                ->withErrors(['message' => ['Data Kosong']]);
+        }
+
+        $unsurSurvey = [];
+        foreach ($data['data'] as $dataItem) {
+            $filteredKuesioner = $kuesioners->where('question', $dataItem->question)->first();
+            $unsur = $filteredKuesioner->unsur->unsur;
+
+            if (!isset($unsurSurvey[$unsur])) {
+                $unsurSurvey[$unsur] = [
+                    'total' => 0,
+                    'count' => 0,
+                    'average' => 0,
+                ];
+            }
+
+            $unsurSurvey[$unsur]['total'] += $dataItem->NRRPerUnsur;
+            $unsurSurvey[$unsur]['count']++;
+            $unsurSurvey[$unsur]['average'] = $unsurSurvey[$unsur]['total'] / $unsurSurvey[$unsur]['count'];
+        }
+
+        $pdf = Pdf::loadView('export.ikm', compact('ikm', 'data', 'unsurSurvey'));
 
         return $pdf->download('Laporan IKM.pdf');
     }
@@ -375,9 +397,32 @@ class DasborController extends Controller
 
         $ikm = getIkmData($respondens, $kuesioners);
         $data = getIkm($respondens, $kuesioners);
-        
-        $pdf = PDF::loadView('export.ikm', compact('ikm', 'data'));
-        
+
+        if (count($data['data']) == 0) {
+            return redirect()->back()
+                ->withErrors(['message' => ['Data Kosong']]);
+        }
+
+        $unsurSurvey = [];
+        foreach ($data['data'] as $dataItem) {
+            $filteredKuesioner = $kuesioners->where('question', $dataItem->question)->first();
+            $unsur = $filteredKuesioner->unsur->unsur;
+
+            if (!isset($unsurSurvey[$unsur])) {
+                $unsurSurvey[$unsur] = [
+                    'total' => 0,
+                    'count' => 0,
+                    'average' => 0,
+                ];
+            }
+
+            $unsurSurvey[$unsur]['total'] += $dataItem->NRRPerUnsur;
+            $unsurSurvey[$unsur]['count']++;
+            $unsurSurvey[$unsur]['average'] = $unsurSurvey[$unsur]['total'] / $unsurSurvey[$unsur]['count'];
+        }
+
+        $pdf = Pdf::loadView('export.ikm', compact('ikm', 'data', 'unsurSurvey'));
+
         return $pdf->stream();
     }
 
@@ -412,7 +457,12 @@ class DasborController extends Controller
 
         extract(getIKM($respondens, $kuesioners));
 
-        $pdf = PDF::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
+        if (count($data) == 0) {
+            return redirect()->back()
+                ->withErrors(['message' => ['Data Kosong']]);
+        }
+
+        $pdf = Pdf::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
 
         return $pdf->download('Laporan IKM.pdf');
     }
@@ -446,9 +496,14 @@ class DasborController extends Controller
         $kuesioners = Kuesioner::all();
 
         extract(getIKM($respondens, $kuesioners));
-        
-        $pdf = PDF::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
-        
+
+        if (count($data) == 0) {
+            return redirect()->back()
+                ->withErrors(['message' => ['Data Kosong']]);
+        }
+
+        $pdf = Pdf::loadView('export.ikm-table', compact('data', 'IKM', 'konversiIKM', 'bobotNilaiTertimbang'));
+
         return $pdf->stream();
     }
 

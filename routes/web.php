@@ -34,6 +34,8 @@ Route::middleware(['web', 'auth'])->prefix('dasbor')->group(function () {
    Route::get('/laporan/responden/preview/graph', [ExportController::class, 'responden_preview'])->name('responden.preview.graph');
    Route::get('/laporan/responden/export/table', [ExportController::class, 'responden_export_table'])->name('responden.export.table');
    Route::get('/laporan/responden/preview/table', [ExportController::class, 'responden_preview_table'])->name('responden.preview.table');
+   Route::get('/laporan/feedback/export/table', [ExportController::class, 'feedback_export_table'])->name('feedback.export.table');
+   Route::get('/laporan/feedback/preview/table', [ExportController::class, 'feedback_preview_table'])->name('feedback.preview.table');
    Route::get('/village', [DasborController::class, 'village'])->name('village.index');
    Route::post('/village', [DasborController::class, 'village_add'])->name('village.add');
    Route::patch('/village/{uuid}', [DasborController::class, 'village_update'])->name('village.update');

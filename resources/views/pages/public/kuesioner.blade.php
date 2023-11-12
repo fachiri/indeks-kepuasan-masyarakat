@@ -98,7 +98,7 @@
 					@else
 						<span class="mr-2">1)</span>
 					@endif
-					Personal <span class="hidden sm:ml-2 sm:inline-flex">Info</span>
+					Data <span class="hidden sm:ml-2 sm:inline-flex">Diri</span>
 				</span>
 			</li>
 			<li class="after:border-1 {{ $step == 2 ? 'text-blue-600' : '' }} flex items-center after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 after:content-[''] dark:after:border-gray-700 sm:after:inline-block md:w-full xl:after:mx-10">
@@ -118,7 +118,7 @@
 				Kritik & Saran
 			</li>
 		</ol>
-		<div class="mx-auto flex max-w-screen-lg px-4 py-8">
+		<div class="mx-auto flex flex-col space-y-5 max-w-screen-lg px-4 py-8">
 			@if ($step == 1)
 				<x-form.personal-info :genders="$genders" :educations="$educations" :jobs="$jobs" :total-kuesioner="$totalKuesioner" :villages="$villages" />
 			@elseif ($step == 2)

@@ -106,13 +106,12 @@
 					<th>NILAI</th>
 					<th>RATA-RATA IKM KESELURUHAN</th>
 				</tr>
-				@foreach ($data['data'] as $key => $item)
+				@foreach ($unsurSurvey as $key => $item)
 					<tr>
-						<td class="text-left">{{ $item->question }}</td>
-						<td>{{ number_format($item->NRRPerUnsur, 2) }}</td !important>
-						padding-left: 5px;
-						@if ($key == 0)
-							<td rowspan="{{ count($data['data']) }}" class="text-lg">{{ $ikm['nilaiIkmTertimbang'] }}</td>
+						<td class="text-left">{{ $key }}</td>
+						<td>{{ number_format($item['average'], 2) }}</td>
+						@if ($loop->iteration == 1)
+							<td rowspan="{{ count($unsurSurvey) }}" class="text-lg">{{ $ikm['nilaiIkmTertimbang'] }}</td>
 						@endif
 					</tr>
 				@endforeach

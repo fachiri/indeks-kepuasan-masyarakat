@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreKuesionerRequest;
 use App\Http\Requests\UpdateKuesionerRequest;
 use App\Models\Kuesioner;
+use App\Models\Unsur;
 use Illuminate\Http\Request;
 
 class KuesionerController extends Controller
@@ -17,18 +18,19 @@ class KuesionerController extends Controller
 
     public function create()
     {
-        return view('pages.dashboard.kuesioner.create');
+        $unsurs = Unsur::all();
+
+        return view('pages.dashboard.kuesioner.create', compact('unsurs'));
     }
 
     public function store(StoreKuesionerRequest $request)
     {
         try {
-            Kuesioner::create($request->only('question'));
+            Kuesioner::create($request->only('question', 'unsur_id'));
             return redirect()
                 ->route('kuesioner.index')
                 ->with('success', 'Data berhasil disimpan!');
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return redirect()->back()
                 ->withErrors(['message' => ['Terjadi kesalahan saat menyimpan data!', $th->getMessage()]]);
         }
@@ -37,7 +39,9 @@ class KuesionerController extends Controller
     public function edit(Kuesioner $kuesioner)
     {
         try {
-            return view('pages.dashboard.kuesioner.edit', compact('kuesioner'));
+            $unsurs = Unsur::all();
+
+            return view('pages.dashboard.kuesioner.edit', compact('kuesioner', 'unsurs'));
         } catch (\Throwable $th) {
             return redirect()->back()
                 ->withErrors(['message' => ['Terjadi kesalahan saat mengambil data!', $th->getMessage()]]);
@@ -48,6 +52,7 @@ class KuesionerController extends Controller
     {
         try {
             $kuesioner->question = $request->question;
+            $kuesioner->unsur_id = $request->unsur_id;
             $kuesioner->update();
             return redirect()->route('kuesioner.index', $kuesioner->uuid)->with('success', 'Data berhasil diedit!');
         } catch (\Throwable $th) {

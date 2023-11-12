@@ -7,8 +7,8 @@
 				<h1 class="mb-4 max-w-2xl text-4xl font-extrabold leading-none tracking-tight dark:text-white md:text-5xl xl:text-6xl">
 					Indeks Kepuasan Masyarakat</h1>
 				<p class="mb-6 max-w-2xl font-light text-gray-500 dark:text-gray-400 md:text-lg lg:mb-8 lg:text-xl">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi atque doloribus harum! Pariatur doloremque
-					sed doloribus esse. Placeat, ipsum iusto!</p>
+					Setiap penilaian yang Anda berikan adalah suara yang berarti bagi kami, dan kami
+sangat menghargai kontribusi Anda dalam meningkatkan kualitas layanan kami</p>
 				<a href="{{ route('kuesioner') }}" class="mr-3 inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
 					Beri Penilaian
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-2 h-6 w-6">
@@ -28,7 +28,8 @@
 			<div class="p-8">
 				<div class="felx-col flex items-center justify-center"> <span class="rounded-full bg-indigo-500 px-2 py-1 text-sm uppercase text-white"> IKM </span> </div>
 				<h1 class="mt-6 text-center text-4xl font-medium text-gray-700"> Indek Kepuasan Masyarakat </h1>
-				<p class="mt-6 text-center text-lg font-light text-gray-500"> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores cupiditate tenetur optio ullam accusamus placeat. </p>
+				<p class="mt-6 text-center text-lg font-light text-gray-500">Terimakasih atas kepercayaan dan dukungan yang Anda berikan kepada kami. Kami
+					sangat bersemangat untuk terus memberikan layanan terbaik bagi Anda</p>
 			</div>
 			<div class="grid grid-cols-2 gap-5 md:grid-cols-4">
 				<div class="rounded-xl border p-8 shadow">
@@ -66,8 +67,8 @@
 		<div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-6 lg:px-8">
 			<div class="sm:flex sm:items-center sm:justify-between">
 				<a href="{{ route('index') }}" class="flex items-center">
-          <img src="https://flowbite.com/docs/images/logo.svg" class="mr-3 h-8" alt="Flowbite Logo" />
-          <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">{{ config('app.name') }}</span>
+          <img src="{{ asset('assets/logo-app.png') }}" class="mr-3 h-8" alt="Logo" />
+					<span class="self-center whitespace-nowrap text-2xl font-medium dark:text-white">{{ config('app.name') }}</span>
         </a>
 				<p class="mt-4 text-center text-sm text-gray-500 lg:mt-0 lg:text-right">
 					Copyright &copy; 2023. All rights reserved.

@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kuesioners', function (Blueprint $table) {
+        Schema::create('unsurs', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique();
-            $table->foreignId('unsur_id')->constrained('unsurs')->onDelete('cascade');
-            $table->string('question');
+            $table->string('unsur');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kuesioners');
+        Schema::dropIfExists('unsurs');
     }
 };

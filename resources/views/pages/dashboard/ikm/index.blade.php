@@ -118,57 +118,63 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach ($data as $item)
-						<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->question }}
+					@if (nilaPersepsi($konversiIKM)->mutu == 'X')
+					<tr>
+						<td colspan="5" class="text-center py-5 italic text-red-500">Data Kosong</td>
+					</tr>
+					@else
+						@foreach ($data as $item)
+							<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $item->question }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ number_format($item->totalNilaiPersepsiPerUnit, 2) }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ number_format($item->NRRPerUnsur, 2) }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ number_format($bobotNilaiTertimbang, 2) }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ number_format($item->NRRTertimbangUnsur, 2) }}
+								</td>
+							</tr>
+						@endforeach
+						<tr class="border-b bg-gray-50 font-bold">
+							<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
+								IKM
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ number_format($item->totalNilaiPersepsiPerUnit, 2) }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ number_format($item->NRRPerUnsur, 2) }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ number_format($bobotNilaiTertimbang, 2) }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ number_format($item->NRRTertimbangUnsur, 2) }}
+								{{ number_format($IKM, 2) }}
 							</td>
 						</tr>
-					@endforeach
-					<tr class="border-b bg-gray-50 font-bold">
-						<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
-							IKM
-						</td>
-						<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-							{{ number_format($IKM, 2) }}
-						</td>
-					</tr>
-					<tr class="border-b bg-gray-50 font-bold">
-						<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
-							Konversi IKM
-						</td>
-						<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-							{{ number_format($konversiIKM, 2) }}
-						</td>
-					</tr>
-					<tr class="border-b bg-gray-50 font-bold">
-						<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
-							Mutu Pelayanan (Hasil Penilaian)
-						</td>
-						<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-							{{ nilaPersepsi($konversiIKM)->mutu }}
-						</td>
-					</tr>
-					<tr class="border-b bg-gray-50 font-bold">
-						<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
-							Kinerja Unit Pelayanan
-						</td>
-						<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-							{{ nilaPersepsi($konversiIKM)->kinerja }}
-						</td>
-					</tr>
+						<tr class="border-b bg-gray-50 font-bold">
+							<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
+								Konversi IKM
+							</td>
+							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+								{{ number_format($konversiIKM, 2) }}
+							</td>
+						</tr>
+						<tr class="border-b bg-gray-50 font-bold">
+							<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
+								Mutu Pelayanan (Hasil Penilaian)
+							</td>
+							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+								{{ nilaPersepsi($konversiIKM)->mutu }}
+							</td>
+						</tr>
+						<tr class="border-b bg-gray-50 font-bold">
+							<td scope="row" colspan="4" class="border-r px-6 py-4 text-gray-900 dark:text-white">
+								Kinerja Unit Pelayanan
+							</td>
+							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+								{{ nilaPersepsi($konversiIKM)->kinerja }}
+							</td>
+						</tr>
+					@endif
 				</tbody>
 			</table>
 		</div>

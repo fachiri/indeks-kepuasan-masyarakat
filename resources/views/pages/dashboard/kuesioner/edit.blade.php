@@ -11,6 +11,14 @@
       <form action="{{ route('kuesioner.update', $kuesioner->uuid) }}" method="POST">
         @method('PUT')
         @csrf
+        <div class="mb-3">
+					<select name="unsur_id" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+						<option value="" hidden>-- Pilih Unsur --</option>
+						@foreach ($unsurs as $unsur)
+							<option value="{{ $unsur->id }}" {{ $kuesioner->unsur->unsur == $unsur->unsur ? 'selected' : '' }}>{{ $unsur->unsur }}</option>
+						@endforeach
+					</select>
+				</div>
         <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
           <div class="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
             <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x dark:divide-gray-600">

@@ -1,3 +1,7 @@
+<div class="flex basis-full flex-col rounded-lg border border-gray-200 bg-white px-5 py-5 shadow dark:border-gray-700 dark:bg-gray-800">
+	<h6 class="font-bold mb-3">Petunjuk</h6>
+	<p>Silakan berikan kritik dan saran yang membangun jika Anda memiliki. Setelah itu, tekan tombol "Konfirmasi".</p>
+</div>
 <div class="flex basis-full flex-col space-y-5 rounded-lg border border-gray-200 bg-white px-5 py-5 shadow dark:border-gray-700 dark:bg-gray-800">
 	<h5 class="mb-5 text-center text-2xl font-medium tracking-tight text-gray-900 dark:text-white">
 		Kritik & Saran

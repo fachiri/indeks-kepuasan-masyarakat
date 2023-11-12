@@ -1,3 +1,7 @@
+<div class="flex basis-full flex-col rounded-lg border border-gray-200 bg-white px-5 py-5 shadow dark:border-gray-700 dark:bg-gray-800">
+	<h6 class="font-bold mb-3">Petunjuk</h6>
+	<p>Harap mengisi kuesioner di bawah ini dengan menekan emoji/gambar, dimulai dari yang paling kanan <span style="display: inline-block;"><img src="{{ asset('assets/1.svg') }}" width="20" height="20"></span> (Tidak Baik), <span style="display: inline-block;"><img src="{{ asset('assets/2.svg') }}" width="20" height="20"></span> (Kurang Baik), <span style="display: inline-block;"><img src="{{ asset('assets/3.svg') }}" width="20" height="20"></span> (Baik), hingga <span style="display: inline-block;"><img src="{{ asset('assets/4.svg') }}" width="20" height="20"></span> (Sangat Baik). Anda dapat kembali ke kuesioner sebelumnya dan mengubah jawaban dengan menekan tombol panah kiri atau kanan.</p>
+</div>
 <div class="flex basis-full flex-col items-center space-y-12 rounded-lg border border-gray-200 bg-white px-5 py-20 text-center shadow dark:border-gray-700 dark:bg-gray-800">
 	<div class="flex w-full justify-center">
 		<x-link.button :href="$previous" icon="chevron-left" :disabled="$previous === '#' ? true : false" />

@@ -280,34 +280,42 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach ($respondens as $responden)
-						<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $respondens->firstItem() + $loop->index }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->name }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->gender }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->age }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->education }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->job }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $responden->village }}
-							</td>
-							<td class="flex space-x-3 whitespace-nowrap px-6 py-4">
-								<a href="{{ route('responden.show', $responden->uuid) }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Detail</a>
-							</td>
+					@if (count($respondens) == 0)
+						<tr>
+							<tr>
+								<td colspan="8" class="text-center py-5 italic text-red-500">Data Kosong</td>
+							</tr>
 						</tr>
-					@endforeach
+					@else
+						@foreach ($respondens as $responden)
+							<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $respondens->firstItem() + $loop->index }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->name }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->gender }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->age }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->education }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->job }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $responden->village }}
+								</td>
+								<td class="flex space-x-3 whitespace-nowrap px-6 py-4">
+									<a href="{{ route('responden.show', $responden->uuid) }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Detail</a>
+								</td>
+							</tr>
+						@endforeach
+					@endif
 				</tbody>
 			</table>
 

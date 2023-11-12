@@ -1,8 +1,8 @@
 <nav class="border-b-2 border-gray-200 bg-white dark:bg-gray-900">
 	<div class="mx-auto flex max-w-screen-lg flex-wrap items-center justify-between p-4">
 		<a href="{{ route('index') }}" class="flex items-center">
-			<img src="https://flowbite.com/docs/images/logo.svg" class="mr-3 h-8" alt="Flowbite Logo" />
-			<span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">{{ $appName }}</span>
+			<img src="{{ asset('assets/logo-app.png') }}" class="mr-3 h-8" alt="Logo" />
+			<span class="self-center whitespace-nowrap text-2xl font-medium dark:text-white">{{ $appName }}</span>
 		</a>
 		<button data-collapse-toggle="navbar-default" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 md:hidden" aria-controls="navbar-default" aria-expanded="false">
 			<span class="sr-only">Open main menu</span>
