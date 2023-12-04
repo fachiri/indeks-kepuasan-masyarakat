@@ -152,7 +152,7 @@
 					<td>{{ $responden->age }}</td>
 					<td>{{ $responden->education }}</td>
 					<td>{{ $responden->job }}</td>
-					<td>{{ $responden->village }}</td>
+					<td>{{ $responden->village->village }}</td>
 				</tr>
 			@endforeach
 		</table>

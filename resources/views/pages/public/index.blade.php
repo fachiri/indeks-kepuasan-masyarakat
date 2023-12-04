@@ -5,7 +5,7 @@
 		<div class="mx-auto mt-10 grid h-full max-w-screen-lg rounded-xl border-2 bg-white px-4 py-8 shadow lg:h-auto lg:grid-cols-12 lg:gap-8 lg:py-16 xl:gap-0">
 			<div class="mr-auto md:pl-10 place-self-center text-center lg:col-span-7 lg:place-self-start lg:text-start">
 				<h1 class="mb-4 max-w-2xl text-4xl font-extrabold leading-none tracking-tight dark:text-white md:text-5xl xl:text-6xl">
-					Indeks Kepuasan Masyarakat</h1>
+					Survey Kepuasan Masyarakat</h1>
 				<p class="mb-6 max-w-2xl font-light text-gray-500 dark:text-gray-400 md:text-lg lg:mb-8 lg:text-xl">
 					Setiap penilaian yang Anda berikan adalah suara yang berarti bagi kami, dan kami
 sangat menghargai kontribusi Anda dalam meningkatkan kualitas layanan kami</p>

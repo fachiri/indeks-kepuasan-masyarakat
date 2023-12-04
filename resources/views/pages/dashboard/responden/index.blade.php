@@ -165,7 +165,7 @@
 						<select name="village" id="village" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
 							<option value="">Semua</option>
 							@foreach ($villages as $item)
-								<option value="{{ $item->village }}" {{ request('village') == $item->village ? 'selected' : '' }}>{{ $item->village }}</option>
+								<option value="{{ $item->id }}" {{ request('village') == $item->id ? 'selected' : '' }}>{{ $item->village }}</option>
 							@endforeach
 						</select>
 					</div>
@@ -308,7 +308,7 @@
 									{{ $responden->job }}
 								</td>
 								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-									{{ $responden->village }}
+									{{ $responden->village->village }}
 								</td>
 								<td class="flex space-x-3 whitespace-nowrap px-6 py-4">
 									<a href="{{ route('responden.show', $responden->uuid) }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Detail</a>

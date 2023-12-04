@@ -83,12 +83,6 @@
 							Nama
 						</th>
 						<th scope="col" class="px-6 py-3">
-							Email
-						</th>
-						<th scope="col" class="px-6 py-3">
-							No. HP
-						</th>
-						<th scope="col" class="px-6 py-3">
 							Kritik dan Saran
 						</th>
 					</tr>
@@ -101,12 +95,6 @@
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 								{{ $item->responden->name }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->responden->email }}
-							</td>
-							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-								{{ $item->responden->telp }}
 							</td>
 							<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 								{{ $item->feedback }}

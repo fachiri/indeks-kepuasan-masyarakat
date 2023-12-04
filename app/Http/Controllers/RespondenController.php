@@ -38,7 +38,7 @@ class RespondenController extends Controller
                     ->orWhere('age', 'like', "%$searchTerm%")
                     ->orWhere('education', 'like', "%$searchTerm%")
                     ->orWhere('job', 'like', "%$searchTerm%")
-                    ->orWhere('village', 'like', "%$searchTerm%");
+                    ->orWhere('village_id', 'like', "%$searchTerm%");
             });
         }
 
@@ -68,7 +68,7 @@ class RespondenController extends Controller
         }
 
         if (isset($request->village)) {
-            $query->where('village', $request->village);
+            $query->where('village_id', $request->village);
         }
 
         $respondens = $query->latest()->paginate($request->per_page ?? 5);

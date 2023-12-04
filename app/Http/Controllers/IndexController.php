@@ -181,9 +181,7 @@ class IndexController extends Controller
                 'age' => $request->age,
                 'education' => $request->education,
                 'job' => $request->job,
-                'village' => $request->village,
-                'email' => $request->email,
-                'telp' => $request->telp,
+                'village_id' => $request->village,
             ]);
 
             if($request->feedback) {

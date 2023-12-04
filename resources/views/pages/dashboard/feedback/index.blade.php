@@ -39,12 +39,6 @@
 							Nama
 						</th>
 						<th scope="col" class="px-6 py-3">
-							Email
-						</th>
-						<th scope="col" class="px-6 py-3">
-							No. HP
-						</th>
-						<th scope="col" class="px-6 py-3">
 							Kritik & Saran
 						</th>
 					</tr>
@@ -64,12 +58,6 @@
 									{{ $item->responden->name }}
 								</td>
 								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-									{{ $item->responden->email }}
-								</td>
-								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
-									{{ $item->responden->telp }}
-								</td>
-								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
 									{{ $item->feedback }}
 								</td>
 							</tr>
@@ -81,6 +69,47 @@
 			<div class="mt-5">
 				{{ $data->links() }}
 			</div>
+		</div>
+	</x-card>
+
+	<x-card>
+		<div class="relative overflow-x-auto p-5 sm:rounded-lg">
+			<table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+				<thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+					<tr>
+						<th scope="col" class="px-6 py-3">
+							#
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Keyword
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Jumlah
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (count($topKeywords) == 0)
+						<tr>
+							<td colspan="8" class="py-5 text-center italic text-red-500">Data Kosong</td>
+						</tr>
+					@else
+						@foreach ($topKeywords as $word => $count)
+							<tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $loop->iteration }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $word }}
+								</td>
+								<td scope="row" class="px-6 py-4 text-gray-900 dark:text-white">
+									{{ $count }}
+								</td>
+							</tr>
+						@endforeach
+					@endif
+				</tbody>
+			</table>
 		</div>
 	</x-card>
 @endsection

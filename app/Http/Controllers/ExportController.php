@@ -40,7 +40,7 @@ function getRespondenDataExport($request)
         ->orWhere('age', 'like', "%$searchTerm%")
         ->orWhere('education', 'like', "%$searchTerm%")
         ->orWhere('job', 'like', "%$searchTerm%")
-        ->orWhere('village', 'like', "%$searchTerm%");
+        ->orWhere('village_id', 'like', "%$searchTerm%");
     });
   }
 
@@ -70,7 +70,7 @@ function getRespondenDataExport($request)
   }
 
   if (isset($request->village)) {
-    $query->where('village', $request->village);
+    $query->where('village_id', $request->village);
   }
 
   $respondens = $query->get();
@@ -143,7 +143,7 @@ function getRespondenDataExport($request)
   $villages = Village::all();
   foreach ($villages as $key => $village) {
     $labels[$key] = '"' . $village->village . '"';
-    $data[$key] = $respondens->where('village', $village->village)->count();
+    $data[$key] = $respondens->where('village_id', $village->id)->count();
   }
 
   $chartDesaConfig = '{
