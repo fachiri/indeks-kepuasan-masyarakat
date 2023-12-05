@@ -261,7 +261,7 @@ class DasborController extends Controller
         $series = [];
         $labels = [];
         foreach ($villages as $key => $village) {
-            $series[$key] = (int) number_format(getPercentage($dataRespondens->where('village', $village->village)->count(), $dataRespondens->count()), 2);
+            $series[$key] = (int) number_format(getPercentage($dataRespondens->where('village_id', $village->id)->count(), $dataRespondens->count()), 2);
             $labels[$key] = $village->village;
         }
         $dataGrafikDesa = (object) [
