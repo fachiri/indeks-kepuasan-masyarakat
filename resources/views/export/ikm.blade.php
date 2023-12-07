@@ -111,7 +111,7 @@
 						<td class="text-left">{{ $key }}</td>
 						<td>{{ number_format($item['average'], 2) }}</td>
 						@if ($loop->iteration == 1)
-							<td rowspan="{{ count($unsurSurvey) }}" class="text-lg">{{ $ikm['nilaiIkmTertimbang'] }}</td>
+							<td rowspan="{{ count($unsurSurvey) }}" class="text-lg">{{ $ikm['nilaiIkmTertimbang'] }}/4.00</td>
 						@endif
 					</tr>
 				@endforeach
