@@ -86,8 +86,16 @@
 		<div class="center-horizontal">
 			<table class="table">
 				<tr>
-					<th colspan="2" class="w-50persen">MUTU PELAYANAN</th>
-					<th class="w-50persen">KINERJA UNIT PELAYANAN</th>
+					<th colspan="2" class="w-50persen">NILAI IKM</th>
+					<th class="w-50persen">JUMLAH RESPONDEN</th>
+				</tr>
+				<tr>
+					<td colspan="2" class="text-lg">{{ $ikm['ikmUnit'] }}</td>
+					<td class="text-lg">{{ $ikm['responden']->jumlah }}</td>
+				</tr>
+				<tr>
+					<th colspan="2">MUTU PELAYANAN</th>
+					<th>KINERJA UNIT PELAYANAN</th>
 				</tr>
 				<tr>
 					<td colspan="2" class="text-lg">{{ $ikm['mutu'] }}</td>
@@ -96,21 +104,17 @@
 				<tr>
 					<th>UNSUR SURVEY</th>
 					<th>NILAI</th>
-					<th>NILAI IKM</th>
+					<th>RATA-RATA IKM KESELURUHAN</th>
 				</tr>
 				@foreach ($unsurSurvey as $key => $item)
 					<tr>
 						<td class="text-left">{{ $key }}</td>
 						<td>{{ number_format($item['average'], 2) }}</td>
 						@if ($loop->iteration == 1)
-							<td rowspan="{{ count($unsurSurvey)+1 }}" class="text-lg">{{ $ikm['ikmUnit'] }}</td>
+							<td rowspan="{{ count($unsurSurvey) }}" class="text-lg">{{ $ikm['nilaiIkmTertimbang'] }}/4.00</td>
 						@endif
 					</tr>
 				@endforeach
-				<tr>
-					<th>NRR IKM</th>
-					<th>{{ $ikm['nilaiIkmTertimbang'] }}</th>
-				</tr>
 				<tr>
 					<th colspan="2">DATA RESPONDEN</th>
 					<th>PERIODE SURVEI</th>
@@ -118,10 +122,6 @@
 				<tr>
 					<td colspan="2">
 						<table class="borderless">
-							<tr>
-								<td>Jumlah Responden: </td>
-								<td>{{ $ikm['responden']->jumlah }}</td>
-							</tr>
 							<tr>
 								<td>Jenis Kelamin</td>
 								<td>:Laki-laki = {{ $ikm['responden']->laki }}</td>

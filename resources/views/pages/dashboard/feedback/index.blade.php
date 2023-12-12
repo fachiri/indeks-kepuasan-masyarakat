@@ -111,5 +111,37 @@
 				</tbody>
 			</table>
 		</div>
+
+		<div class="mx-5 my-5 flex items-center justify-between pb-5">
+			<p class="text-sm leading-5 text-gray-700">
+				Showing
+				<span class="font-medium">1</span>
+				to
+				<span class="font-medium">5</span>
+				of
+				<span class="font-medium">10</span>
+				results
+			</p>
+			<div>
+				<span class="relative z-0 inline-flex rounded-md shadow-sm">
+					<a href="{{ route('feedback.index', ['pg' => '1']) }}" rel="next" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium leading-5 text-gray-500 ring-gray-300 transition duration-150 ease-in-out hover:text-gray-400 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring active:bg-gray-100 active:text-gray-500" aria-label="Next &amp;raquo;">
+						<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+						</svg>
+					</a>
+					<a href="{{ route('feedback.index', ['pg' => '1']) }}" class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium leading-5 text-gray-700 ring-gray-300 transition duration-150 ease-in-out hover:text-gray-500 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring active:bg-gray-100 active:text-gray-700" aria-label="Go to page 1">
+						1
+					</a>
+					<a href="{{ route('feedback.index', ['pg' => '2']) }}" class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium leading-5 text-gray-700 ring-gray-300 transition duration-150 ease-in-out hover:text-gray-500 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring active:bg-gray-100 active:text-gray-700" aria-label="Go to page 2">
+						2
+					</a>
+					<a href="{{ route('feedback.index', ['pg' => '2']) }}" rel="next" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium leading-5 text-gray-500 ring-gray-300 transition duration-150 ease-in-out hover:text-gray-400 focus:z-10 focus:border-blue-300 focus:outline-none focus:ring active:bg-gray-100 active:text-gray-500" aria-label="Next &amp;raquo;">
+						<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+						</svg>
+					</a>
+				</span>
+			</div>
+		</div>
 	</x-card>
 @endsection

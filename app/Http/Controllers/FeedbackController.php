@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class FeedbackController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $data = Feedback::latest()->paginate(5);
 
@@ -45,7 +45,21 @@ class FeedbackController extends Controller
 
         arsort($keywordsCount);
 
-        $topKeywords = array_slice($keywordsCount, 0, 5);
+        $topKeywords = array_slice($keywordsCount, 0, 10);
+
+        if (!request()->has('pg') || request()->pg == 1) {
+            $itemsPerPage = 5;
+            $currentPage = 1;
+            $startIndex = ($currentPage - 1) * $itemsPerPage;
+            $topKeywords = array_slice($topKeywords, $startIndex, $itemsPerPage);
+        }
+
+        if (request()->has('pg') && request()->pg == 2) {
+            $itemsPerPage = 5;
+            $currentPage = 2;
+            $startIndex = ($currentPage - 1) * $itemsPerPage;
+            $topKeywords = array_slice($topKeywords, $startIndex, $itemsPerPage);
+        }
 
         return view('pages.dashboard.feedback.index', compact('data', 'topKeywords'));
     }
