@@ -161,9 +161,9 @@
 						</table>
 					</td>
 					<td>
-						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('start_date'))->isoFormat('DD MMMM', 'Do MMMM') }}
+						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('start_date'))->isoFormat('DD MMMM YYYY', 'Do MMMM YYYY') }}
 						-
-						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('end_date'))->isoFormat('DD MMMM', 'Do MMMM') }}
+						{{ \Carbon\Carbon::createFromFormat('Y-m-d', request('end_date'))->isoFormat('DD MMMM YYYY', 'Do MMMM YYYY') }}
 				</td>
 				
 				</tr>
